@@ -1,3 +1,4 @@
+/*
 package cn.ucai.fulicenter.views;
 
 import android.content.Context;
@@ -26,11 +27,13 @@ import cn.ucai.fulicenter.bean.CategoryChildBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.Utils;
 
+*/
 /**
  * 显示分类中当前所属小类的列表
  * @author yao
  *
- */
+ *//*
+
 public class CatChildFilterButton extends Button {
     Context mContext;
     CatChildFilterButton mbtnTop;
@@ -39,10 +42,12 @@ public class CatChildFilterButton extends Button {
     CatFilterAdapter mAdapter;
     OnClickListener mListener;
 
-    /**
+    */
+/**
      * true:arrow down
      * false:arrow up
-     * */
+     * *//*
+
     boolean mExpandOff;
 
     public CatChildFilterButton(Context context, AttributeSet attrs) {
@@ -91,11 +96,13 @@ public class CatChildFilterButton extends Button {
         mExpandOff=!mExpandOff;
     }
 
-    /**
+    */
+/**
      * 显示分类列表的适配器
      * @author yao
      *
-     */
+     *//*
+
     class CatFilterAdapter extends BaseAdapter {
         Context context;
         ArrayList<CategoryChildBean> Children;
@@ -166,11 +173,13 @@ public class CatChildFilterButton extends Button {
         }
     }
 
-    /**
+    */
+/**
      * 设置分类列表的下拉按钮单击事件监听
      * @param groupName
      * @param childList
-     */
+     *//*
+
     public void setOnCatFilterClickListener(final String groupName,
                                             final ArrayList<CategoryChildBean> childList){
         mbtnTop.setOnClickListener(new OnClickListener() {
@@ -192,3 +201,4 @@ public class CatChildFilterButton extends Button {
         });
     }
 }
+*/

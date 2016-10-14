@@ -2,7 +2,7 @@ package cn.ucai.fulicenter.utils;
 
 import android.widget.Toast;
 
-import cn.ucai.fulicenter.FuLiCenterApplication;
+/*import cn.ucai.fulicenter.FuLiCenterApplication;
 
 public class CommonUtils {
     public static void showLongToast(String msg){
@@ -17,4 +17,4 @@ public class CommonUtils {
     public static void showShortToast(int rId){
         showShortToast(FuLiCenterApplication.getInstance().getString(rId));
     }
-}
+}*/

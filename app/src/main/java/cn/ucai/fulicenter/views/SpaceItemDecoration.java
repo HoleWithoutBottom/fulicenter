@@ -1,3 +1,4 @@
+/*
 package cn.ucai.fulicenter.views;
 
 import android.graphics.Rect;
@@ -29,3 +30,4 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration{
 //            }
     }
 }
+*/

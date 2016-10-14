@@ -1,3 +1,4 @@
+/*
 package cn.ucai.fulicenter.views;
 
 import android.content.Context;
@@ -20,23 +21,37 @@ import java.util.TimerTask;
 
 import cn.ucai.fulicenter.utils.ImageLoader;
 
+*/
 /**
  * 图片轮播
  * @author yao
- */
+ *//*
+
 public class SlideAutoLoopView extends ViewPager {
     Context mContext;
-    /** 自动播放的标识符*/
+    */
+/** 自动播放的标识符*//*
+
     final int ACTION_PLAY=1;
-    /**定义FlowIndicator:图片指示器view*/
+    */
+/**定义FlowIndicator:图片指示器view*//*
+
     FlowIndicator mFlowIndicator;
-    /** 轮播图片的适配器*/
+    */
+/** 轮播图片的适配器*//*
+
     SlideAutoLooopAdapter mAdapter;
-    /** 图片数量*/
+    */
+/** 图片数量*//*
+
     int mCount;
-    /** 图片轮播间隔时间*/
+    */
+/** 图片轮播间隔时间*//*
+
     int mDuration=2000;
-    /** 相册的图片下载地址数组*/
+    */
+/** 相册的图片下载地址数组*//*
+
     String[] mAlbumImgUrl;
     Timer mTimer;
     Handler mHandler;
@@ -54,9 +69,11 @@ public class SlideAutoLoopView extends ViewPager {
         setOnTouchListener();
     }
 
-    /**
+    */
+/**
      * 设置触摸页面的事件监听
-     */
+     *//*
+
     private void setOnTouchListener() {
         this.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -70,9 +87,11 @@ public class SlideAutoLoopView extends ViewPager {
         });
     }
 
-    /**
+    */
+/**
      * 监听ViewPager页面改变
-     */
+     *//*
+
     private void setOnPageChangeListener() {
         this.setOnPageChangeListener(new OnPageChangeListener() {
             
@@ -115,11 +134,13 @@ public class SlideAutoLoopView extends ViewPager {
        };
     }
 
-    /**
+    */
+/**
      * 轮播图片的适配器
      * @author yao
      *
-     */
+     *//*
+
     class SlideAutoLooopAdapter extends PagerAdapter {
         Context context;
         String[] albumImgUrl;
@@ -184,9 +205,11 @@ public class SlideAutoLoopView extends ViewPager {
         }
     }
     
-    /**
+    */
+/**
      * 开始图片的轮播
-     */
+     *//*
+
     public void startPlayLoop(FlowIndicator flowIndicator, String[] albumImgUrl, int count){
         if(mAdapter==null){
             mCount=count;
@@ -226,9 +249,11 @@ public class SlideAutoLoopView extends ViewPager {
         }, 1,mDuration);
     }
     
-    /**
+    */
+/**
      * 停止图片轮播
-     */
+     *//*
+
     public void stopPlayLoop(){
         if(mTimer!=null){
             mTimer.cancel();
@@ -236,11 +261,13 @@ public class SlideAutoLoopView extends ViewPager {
         }
     }
     
-    /**
+    */
+/**
      * ViewPager列表项滚动的距离、时间间隔的设置
      * @author yao
      *
-     */
+     *//*
+
     class MyScroller extends Scroller {
         public MyScroller(Context context, Interpolator interpolator) {
             super(context, interpolator);
@@ -259,3 +286,4 @@ public class SlideAutoLoopView extends ViewPager {
         }
     }
 }
+*/

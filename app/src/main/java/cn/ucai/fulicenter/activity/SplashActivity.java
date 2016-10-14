@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import cn.ucai.fulicenter.MainActivity;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.utils.MFGT;
 
 public class SplashActivity extends AppCompatActivity {
     static final long SLEEPTIME = 2000;
@@ -32,8 +33,7 @@ public class SplashActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
+                MFGT.startActivity(SplashActivity.this,HomeActivity.class);
             }
         }.start();
     }
@@ -41,6 +41,6 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
+       MFGT.finish(SplashActivity.this);
     }
 }

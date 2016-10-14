@@ -4,47 +4,79 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/relativeLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/relativeLogin"
-        >
+        android:orientation="horizontal">
+
         <ImageView
+            android:id="@+id/iv_login_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/back"
-            android:id="@+id/iv_login_back"
-            />
+            android:src="@drawable/back" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="账户登录"
-            android:gravity="center_horizontal"
             android:layout_gravity="center_vertical"
-            android:textSize="20sp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="账户登录"
             android:textColor="#000"
-            />
+            android:textSize="20sp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
     </LinearLayout>
+
     <ImageView
         android:id="@+id/ivDivide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/divide_line_bg"
-        android:layout_below="@id/relativeLogin"/>
+        android:layout_below="@id/relativeLogin"
+        android:src="@drawable/divide_line_bg" />
 
-        <EditText
-            android:layout_below="@id/ivDivide"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="用户名"
-            android:drawableRight="@drawable/back"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivDivide"
+        android:layout_weight="1"
+        android:drawableRight="@drawable/user_48px"
+        android:hint="用户名"
+        android:id="@+id/etUserName"/>
 
-
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etPassword"
+        android:layout_below="@id/etUserName"
+        android:drawableRight="@drawable/password_48px"
+        android:hint="密码"/>
+    <Button
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etPassword"
+        android:text="登录"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="20sp"
+        android:textColor="#fff"
+        android:background="@color/main_orange"
+        android:id="@+id/btnLogin"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnLogin"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="免费注册"
+        android:textSize="20sp"
+        android:textColor="@color/red"
+        android:background="@color/tab_bg"
+        android:id="@+id/btnGoToRegister"/>
 </RelativeLayout>
