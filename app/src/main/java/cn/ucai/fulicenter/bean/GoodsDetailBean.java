@@ -4,24 +4,6 @@ package cn.ucai.fulicenter.bean;
  * Created by Administrator on 2016/10/13.
  */
 public class GoodsDetailBean {
-    /**
-     * id : 280
-     * goodsId : 7677
-     * catId : 291
-     * goodsName : 双层分格饭盒 绿色
-     * goodsEnglishName : Monbento
-     * goodsBrief : PP食品级材质，轻以随意组合，轻巧方便。
-     * shopPrice : ￥253
-     * currencyPrice : ￥293
-     * promotePrice : ￥0
-     * rankPrice : ￥293
-     * isPromote : false
-     * goodsThumb : 201509/thumb_img/7677_thumb_G_1442391216339.png
-     * goodsImg : 201509/thumb_img/7677_thumb_G_1442391216339.png
-     * addTime : 1442419200000
-     * shareUrl : http://m.fulishe.com/item/7677
-     * promote : false
-     */
 
     private int id;
     private int goodsId;
@@ -39,12 +21,12 @@ public class GoodsDetailBean {
     private long addTime;
     private String shareUrl;
     private boolean promote;
-    private PropertiesBean properties;
+    private Object properties;
 
     public GoodsDetailBean() {
     }
 
-    public PropertiesBean getProperties() {
+    public Object getProperties() {
         return properties;
     }
 
