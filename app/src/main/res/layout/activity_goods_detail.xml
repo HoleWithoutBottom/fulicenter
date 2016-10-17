@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/good_detail_title_bg"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_goodsDetail_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/back_nomal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:text="商品详情"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_goodsDetail_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:src="@drawable/selector_cart_bg" />
+
+            <TextView
+                android:id="@+id/tv_goodDetail_cart_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/iv_goodsDetail_cart"
+                android:text="4"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_goodsDetail_collect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:src="@drawable/selector_collect_bg" />
+
+        <ImageView
+            android:id="@+id/iv_goodsDetail_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:src="@drawable/selector_share_bg" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp">
+
+        <TextView
+            android:id="@+id/tv_goodsDetail_EnglisheName"
+            style="@style/txt_ContextStyle1"
+            android:text="Monbento"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_goodsDetail_Name"
+            style="@style/txt_ContextStyle1"
+            android:layout_below="@id/tv_goodsDetail_EnglisheName"
+            android:layout_marginTop="10dp"
+            android:text="双层分隔饭盒 绿色"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_goodsDetail_price"
+            style="@style/txt_ContextStyle1"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_goodsDetail_EnglisheName"
+            android:text="$293"
+            android:textColor="@color/red" />
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/iv_goodsDetail_goods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/category_child"
+        android:layout_gravity="center_horizontal"/>
+
+    <cn.ucai.fulicenter.views.FlowIndicator
+        android:id="@+id/goodsDetail_flowIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:count="4"
+        app:focus_color="@color/orange"
+        app:normal_color="@color/gray"
+        app:r="6dp"
+        app:space="2dp" />
+
+    <TextView
+        android:id="@+id/tv_goodsDetails_Brief"
+        style="@style/txt_ContextStyle1"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="你这死变态"
+        android:textColor="@color/black" />
+</LinearLayout>
