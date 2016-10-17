@@ -5,10 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +32,7 @@ public class NewGoodsFragment extends Fragment {
     ArrayList<NewGoodsBean> mGoodsList;
     int mPageId = 1;
     NewGoodsAdapter myAdapter;
-    StaggeredGridLayoutManager staggeredGridLayoutManager;
+    GridLayoutManager gridLayoutManager;
     int mNewState;
 
     public NewGoodsFragment() {
@@ -47,8 +47,14 @@ public class NewGoodsFragment extends Fragment {
         setListener();
         return view;
     }
-
+    // 动态变化recyclerView的布局
     private void setListener() {
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return position == myAdapter.getItemCount() - 1 ? 2 : 1;
+            }
+        });
         setPullDown();
         mRecyclerNewGoods.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -83,10 +89,10 @@ public class NewGoodsFragment extends Fragment {
         downLoadNewGoods(I.ACTION_DOWNLOAD, mPageId);
         mGoodsList = new ArrayList<>();
         // 每行显示2个
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(I.COLUM_NUM, StaggeredGridLayoutManager.VERTICAL);
+        gridLayoutManager = new GridLayoutManager(getActivity(), I.COLUM_NUM, LinearLayoutManager.VERTICAL, false);
         myAdapter = new NewGoodsAdapter(mGoodsList, getActivity());
         mRecyclerNewGoods.setAdapter(myAdapter);
-        mRecyclerNewGoods.setLayoutManager(staggeredGridLayoutManager);
+        mRecyclerNewGoods.setLayoutManager(gridLayoutManager);
 
     }
 
@@ -211,7 +217,7 @@ public class NewGoodsFragment extends Fragment {
                         .addParam(I.IMAGE_URL, goodsBean.getGoodsThumb())
                         .listener(parent)
                         .imageView(newGoodsHolder.ivNewGoods)
-                        .setDragging(mNewState!=RecyclerView.SCROLL_STATE_DRAGGING)
+                        .setDragging(mNewState != RecyclerView.SCROLL_STATE_DRAGGING)
                         .showImage(context);
             }
         }
@@ -246,5 +252,10 @@ public class NewGoodsFragment extends Fragment {
             this.footText = footText;
             notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }
