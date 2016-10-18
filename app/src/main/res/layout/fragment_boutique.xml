@@ -1,0 +1,24 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_Boutiqu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.ucai.fulicenter.fragment.BoutiqueFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="下拉刷新"
+           android:gravity="center_horizontal"
+            android:visibility="gone"
+            android:id="@+id/tv_boutique_refresh"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerBoutique"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
