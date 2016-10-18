@@ -1,9 +1,10 @@
-/*
+
 package cn.ucai.fulicenter.utils;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.bean.Result;
@@ -35,11 +37,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-*/
+
 /**
  * Created by yao on 2016/9/16.
  *
- *//*
+ */
 
 public class OkHttpUtils<T> {
     private static String UTF_8 = "utf-8";
@@ -52,10 +54,10 @@ public class OkHttpUtils<T> {
     private static OkHttpClient mOkHttpClient;
     private Handler mHandler;
 
-    */
+
 /**
      * 存放post请求的实体，实体中存放File类型的文件
-     *//*
+     */
 
     RequestBody mFileBody;
     FormBody.Builder mFormBodyBuilder;
@@ -70,11 +72,11 @@ public class OkHttpUtils<T> {
     private OnCompleteListener<T> mListener;
 
     OkHttpClient.Builder mBuilder;
-    */
+
 /**
      * 构造器，mOkHttpClient必须单例，无论创建多少个OkHttpUtils的实例。
      * 都由mOkHttpClient一个对象处理所有的网络请求。
-     *//*
+     */
 
     public OkHttpUtils(Context context) {
         if (mOkHttpClient == null) {//线程安全的单例
@@ -95,12 +97,12 @@ public class OkHttpUtils<T> {
         initHandler();
     }
 
-    */
+
 /**
      * 设置与服务端连接的时限
      * @param connectTime:连接的时限
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> connectTimeout(int connectTime) {
         if (mBuilder == null) {
@@ -110,12 +112,12 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-    */
+
 /**
      * 设置写数据的时限
      * @param writeTimeout：写数据的时限
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> writeTimeout(int writeTimeout) {
         if (mBuilder == null) {
@@ -125,12 +127,12 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-    */
+
 /**
      * 设置读取数据的时限
      * @param readTimeout：读取数据的时限
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> readTimeout(int readTimeout) {
         if (mBuilder == null) {
@@ -140,14 +142,14 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-    */
+
 /**
      * 设置缓存
      * 第一次请求会请求网络得到数据，第二次以及后面的请求则会从缓存中取出数据
      * @param file:缓存的路径
      * @param fileSize：缓存的容量
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> cache(File file, int fileSize) {
         if (mBuilder == null) {
@@ -157,9 +159,9 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-
+    // FuLiCenterApplication.applicationContext.getMainLooper()
     private void initHandler() {
-        mHandler = new Handler(FuLiCenterApplication.applicationContext.getMainLooper()) {
+        mHandler = new Handler(FuLiCenterApplication.getInstance().getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -175,25 +177,25 @@ public class OkHttpUtils<T> {
         };
     }
 
-    */
+
 /**
      * 用post请求，添加一个文件
      * @param file:添加至form的文件
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> addFile(File file) {
         mFileBody = RequestBody.create(null, file);
         return this;
     }
 
-    */
+
 /**
      * 支持设置媒体文件类型的addFile
      * @param type：媒体类型
      * @param file：添加至form的文件
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> addFile(String type, File file) {
         mFileBody = RequestBody.create(MediaType.parse(type), file);
@@ -218,11 +220,11 @@ public class OkHttpUtils<T> {
         return contentTypeFor;
     }
 
-    */
+
 /**
      * 设置为post的请求
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> post() {
         mFormBodyBuilder = new FormBody.Builder();
@@ -244,32 +246,32 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-    */
+
 /**
      * 用于json解析的类对象
-     *//*
+     */
 
     Class<T> mClazz;
 
-    */
+
 /**
      * 设置json解析的目标类对象
      * @param clazz:解析的类对象
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> targetClass(Class<T> clazz) {
         mClazz = clazz;
         return this;
     }
 
-    */
+
 /**
      * 添加请求参数至url，包括GET和POST请求
      * 不包括POST请求中上传文件的同时向Form中添加其它参数的情况
      * @param key:键
      * @param value：值
-     *//*
+     */
 
     public OkHttpUtils<T> addParam(String key, String value) {
         try {
@@ -290,13 +292,13 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-    */
+
 /**
      * * post请求,上传文件的同时允许在Form中添加多个参数
      * @param key:参数的键
      * @param value：参数的值
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> addFormParam(String key, String value) {
         if (mMultipartBodyBuilder == null) {
@@ -316,7 +318,7 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-    */
+
 /**
      * post请求中在Form中添加包含上传文件的多个参数
      * @param name:文件的大类型
@@ -324,7 +326,7 @@ public class OkHttpUtils<T> {
      * @param mediaType：文件的媒体类型
      * @param file：文件
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> addFormParam(String name, String fileName, String mediaType, File file) {
         if (mMultipartBodyBuilder == null) {
@@ -334,11 +336,11 @@ public class OkHttpUtils<T> {
         return this;
     }
 
-    */
+
 /**
      * 发送请求
      * @param listener：处理服务端返回结果的代码
-     *//*
+     */
 
     public void execute(OnCompleteListener<T> listener) {
         if (listener != null) {
@@ -395,56 +397,56 @@ public class OkHttpUtils<T> {
     }
 
     Callback mCallback;
-    */
+
 /**
      * 在OkHttp创建的工作线程中执行一段代码,
      * @param callback
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> doInBackground(Callback callback) {
         mCallback=callback;
         return this;
     }
 
-    */
+
 /**
      * 在主线程中执行的代码，doInBackground方法之后调用
      * @param listener
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> onPostExecute(OnCompleteListener<T> listener) {
         mListener=listener;
         return this;
     }
 
-    */
+
 /**doInBackground()之前在主线程中执行的方法，类似与AsyncTask中的onPreExecute()
      * @param r:运行的代码
      * @return
-     *//*
+     */
 
     public OkHttpUtils<T> onPreExecute(Runnable r) {
         r.run();
         return this;
     }
 
-    */
+
 /**
      * 工作线程向主线程发送消息
      * @param msg
-     *//*
+     */
 
     public void sendMessage(Message msg) {
         mHandler.sendMessage(msg);
     }
 
-    */
+
 /**
      * 重载的sendMessage方法，用于发送空消息
      * @param what
-     *//*
+     */
 
     public void sendMessage(int what) {
         mHandler.sendEmptyMessage(what);
@@ -456,14 +458,14 @@ public class OkHttpUtils<T> {
         return t;
     }
 
-    */
+
 /**
      * 专门针对Result类的json解析方法，不具有通用性，属性定制、专用的方法
      * @param result
      * @param clazz
      * @param <T>
      * @return
-     *//*
+     */
 
     public <T> T parseJson(Result result, Class<?> clazz) {
         if (result.getRetCode() == 0) {
@@ -474,13 +476,13 @@ public class OkHttpUtils<T> {
         return null;
     }
 
-    */
+
 /**
      * 下载文件，支持更新下载进度
      * @param response：服务端返回的响应类对象
      * @param file：保存下载文件的File
      * @throws Exception：IO异常
-     *//*
+     */
 
     public void downloadFile(Response response, File file) throws Exception {
         FileOutputStream out = new FileOutputStream(file);
@@ -516,10 +518,10 @@ public class OkHttpUtils<T> {
         return arrayList;
     }
 
-    */
+
 /**
      * 释放mClient的资源
-     *//*
+     */
 
     public static void release() {
         if (mOkHttpClient != null) {
@@ -530,4 +532,4 @@ public class OkHttpUtils<T> {
     }
 
 }
-*/
+

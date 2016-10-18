@@ -1,30 +1,30 @@
 package cn.ucai.fulicenter.fragment;
 
 
-import android.content.Context;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.adapter.NewGoodsAdapter;
 import cn.ucai.fulicenter.bean.NewGoodsBean;
+import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
 
-public class NewGoodsFragment extends Fragment {
+public class NewGoodsFragment extends Fragment{
     View view;
     SwipeRefreshLayout mSwipe;
     TextView mTvNewgoodsRefresh;
@@ -34,6 +34,7 @@ public class NewGoodsFragment extends Fragment {
     NewGoodsAdapter myAdapter;
     GridLayoutManager gridLayoutManager;
     int mNewState;
+
 
     public NewGoodsFragment() {
     }
@@ -47,6 +48,7 @@ public class NewGoodsFragment extends Fragment {
         setListener();
         return view;
     }
+
     // 动态变化recyclerView的布局
     private void setListener() {
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -56,12 +58,20 @@ public class NewGoodsFragment extends Fragment {
             }
         });
         setPullDown();
+        setPullUp();
+
+
+
+    }
+
+    private void setPullUp() {
         mRecyclerNewGoods.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mNewState = newState;
-                if (myAdapter.isMore && newState == recyclerView.SCROLL_STATE_IDLE) {
+                myAdapter.setmNewState(newState);
+                if (myAdapter.isMore() && newState == recyclerView.SCROLL_STATE_IDLE) {
                     mPageId++;
                     downLoadNewGoods(I.ACTION_PULL_UP, mPageId);
                 }
@@ -136,122 +146,9 @@ public class NewGoodsFragment extends Fragment {
 
                     @Override
                     public void onError(String error) {
-
+                        CommonUtils.showShortToast(error);
                     }
                 });
-    }
-
-    class NewGoodsViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivNewGoods;
-        TextView tvName, tvPrice;
-
-        public NewGoodsViewHolder(View itemView) {
-            super(itemView);
-            tvName = (TextView) itemView.findViewById(R.id.tv_newGoods_name);
-            tvPrice = (TextView) itemView.findViewById(R.id.tv_newGoods_price);
-            ivNewGoods = (ImageView) itemView.findViewById(R.id.iv_newGoods);
-        }
-    }
-
-    class FootHolder extends RecyclerView.ViewHolder {
-        TextView tvFoot;
-
-        public FootHolder(View itemView) {
-            super(itemView);
-            tvFoot = (TextView) itemView.findViewById(R.id.tvFoot);
-        }
-    }
-
-    class NewGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        ArrayList<NewGoodsBean> mlist;
-        Context context;
-        RecyclerView parent;
-        String footText;
-        boolean isMore;
-
-        public boolean isMore() {
-            return isMore;
-        }
-
-        public void setMore(boolean more) {
-            isMore = more;
-        }
-
-        public NewGoodsAdapter(ArrayList<NewGoodsBean> mlist, Context context) {
-            this.mlist = mlist;
-            this.context = context;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RecyclerView.ViewHolder holder = null;
-            this.parent = (RecyclerView) parent;
-            View layout;
-            switch (viewType) {
-                case I.TYPE_FOOTER:
-                    layout = View.inflate(context, R.layout.item_foot, null);
-                    holder = new FootHolder(layout);
-
-                    break;
-                case I.TYPE_ITEM:
-                    layout = View.inflate(context, R.layout.newgoods_item, null);
-                    holder = new NewGoodsViewHolder(layout);
-                    break;
-            }
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (position == getItemCount() - 1) {
-                FootHolder footHolder = (FootHolder) holder;
-                footHolder.tvFoot.setText(this.footText);
-                return;
-            } else {
-                NewGoodsViewHolder newGoodsHolder = (NewGoodsViewHolder) holder;
-                NewGoodsBean goodsBean = mlist.get(position);
-                newGoodsHolder.tvName.setText(goodsBean.getGoodsName());
-                newGoodsHolder.tvPrice.setText(goodsBean.getPromotePrice());
-                String url = I.SERVER_ROOT + I.REQUEST_DOWNLOAD_IMAGE;
-                ImageLoader.build(url)
-                        .addParam(I.IMAGE_URL, goodsBean.getGoodsThumb())
-                        .listener(parent)
-                        .imageView(newGoodsHolder.ivNewGoods)
-                        .setDragging(mNewState != RecyclerView.SCROLL_STATE_DRAGGING)
-                        .showImage(context);
-            }
-        }
-
-
-        private void initGoodsList(ArrayList<NewGoodsBean> goodslist) {
-            mlist.clear();
-            mlist.addAll(goodslist);
-            notifyDataSetChanged();
-        }
-
-        private void addGoodsList(ArrayList<NewGoodsBean> goodslist) {
-            mlist.addAll(goodslist);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getItemCount() {
-            return mlist == null ? 0 : mlist.size() + 1;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (position == getItemCount() - 1) {
-                return I.TYPE_FOOTER;
-            } else {
-                return I.TYPE_ITEM;
-            }
-        }
-
-        public void setFoot(String footText) {
-            this.footText = footText;
-            notifyDataSetChanged();
-        }
     }
 
     @Override

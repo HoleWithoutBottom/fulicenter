@@ -21,16 +21,16 @@ public class GoodsDetailBean {
     private long addTime;
     private String shareUrl;
     private boolean promote;
-    private Object properties;
+    private PropertiesBean[] properties;
 
     public GoodsDetailBean() {
     }
 
-    public Object getProperties() {
+    public PropertiesBean[] getProperties() {
         return properties;
     }
 
-    public void setProperties(PropertiesBean properties) {
+    public void setProperties(PropertiesBean[] properties) {
         this.properties = properties;
     }
 

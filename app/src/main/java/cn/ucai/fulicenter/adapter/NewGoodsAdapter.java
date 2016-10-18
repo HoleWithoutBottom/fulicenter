@@ -12,10 +12,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
+import cn.ucai.fulicenter.MainActivity;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.GoodsDetailActivity;
+import cn.ucai.fulicenter.activity.HomeActivity;
 import cn.ucai.fulicenter.bean.NewGoodsBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.MFGT;
 
 /**
  * Created by Administrator on 2016/10/17.
@@ -90,7 +93,7 @@ public class NewGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     int goodsId = goodsBean.getGoodsId();
                     Intent intent = new Intent(context, GoodsDetailActivity.class);
                     intent.putExtra("goodsId", goodsId);
-                    context.startActivity(intent);
+                    MFGT.startActivity((HomeActivity)context,intent);
                 }
             });
         }

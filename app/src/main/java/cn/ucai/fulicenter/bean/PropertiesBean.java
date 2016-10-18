@@ -13,14 +13,14 @@ public class PropertiesBean {
     private String colorCode;
     private String colorImg;
     private String colorUrl;
-    private Object albumns;
+    private AlbumsBean[] albums;
 
-    public Object getAlbumns() {
-        return albumns;
+    public AlbumsBean[] getAlbums() {
+        return albums;
     }
 
-    public void setAlbumns(AlbumsBean albumns) {
-        this.albumns = albumns;
+    public void setAlbums(AlbumsBean[] albums) {
+        this.albums = albums;
     }
 
     public int getId() {
@@ -79,9 +79,6 @@ public class PropertiesBean {
         this.colorUrl = colorUrl;
     }
 
-    public PropertiesBean() {
-    }
-
     @Override
     public String toString() {
         return "PropertiesBean{" +
@@ -92,7 +89,12 @@ public class PropertiesBean {
                 ", colorCode='" + colorCode + '\'' +
                 ", colorImg='" + colorImg + '\'' +
                 ", colorUrl='" + colorUrl + '\'' +
-                ", albumns=" + albumns +
+                ", albums=" + albums +
                 '}';
     }
+
+    public PropertiesBean() {
+    }
+
+
 }

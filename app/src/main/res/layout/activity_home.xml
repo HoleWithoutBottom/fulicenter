@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/list_background">
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <LinearLayout
+        android:id="@+id/menu_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -73,8 +73,6 @@
                 android:gravity="center"
                 />
         </RelativeLayout>
-
-
         <RadioButton
             android:id="@+id/rbPersonal"
             android:layout_width="wrap_content"
@@ -85,18 +83,18 @@
             android:drawableTop="@drawable/selector_menu_item_personal_center"
             android:gravity="center_horizontal"
             android:text="我"/>
-    </RadioGroup>
+    </LinearLayout>
     <View
         android:id="@+id/divideLine"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_above="@id/radioGroup"
+        android:layout_above="@id/menu_linearLayout"
         android:background="@color/blue"
         />
-    <RelativeLayout
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_relativeLayout"
+        android:id="@+id/fragment_viewPager"
         android:layout_above="@id/divideLine">
-    </RelativeLayout>
+    </android.support.v4.view.ViewPager>
 </RelativeLayout>

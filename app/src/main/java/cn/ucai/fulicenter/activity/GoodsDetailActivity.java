@@ -2,6 +2,8 @@ package cn.ucai.fulicenter.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -23,7 +25,9 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.AlbumsBean;
 import cn.ucai.fulicenter.bean.GoodsDetailBean;
 import cn.ucai.fulicenter.bean.PropertiesBean;
+import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 import cn.ucai.fulicenter.views.FlowIndicator;
 
@@ -51,11 +55,11 @@ public class GoodsDetailActivity extends AppCompatActivity {
     FlowIndicator goodsDetailFlowIndicator;
     @Bind(R.id.tv_goodsDetails_Brief)
     TextView tvGoodsDetailsBrief;
-    int mFocus = -1;
-    int mCount;
+    Handler mHandler;
     AlbumsBean[] albums;
     ArrayList<ImageView> imageViews;
     PictureAdapter myAdapter;
+    int mCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +68,40 @@ public class GoodsDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initData();
         setListener();
+        initHandler();
+
+    }
+
+    private void setThread() {
+        new Thread() {
+            @Override
+            public void run() {
+                for (int i = 0; i <= mCount - 1; i++) {
+                    SystemClock.sleep(1500);
+                    Message message = Message.obtain();
+                    message.arg1 = i;
+                    mHandler.sendMessage(message);
+                    if (i == mCount - 1) {
+                        i = -1;
+                    }
+                }
+            }
+        }.start();
+    }
+
+
+    private void initHandler() {
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                int i = msg.arg1;
+                mViewPager.setCurrentItem(i);
+            }
+        };
     }
 
     private void setListener() {
+        // 图片切换
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -91,7 +126,7 @@ public class GoodsDetailActivity extends AppCompatActivity {
         imageViews = new ArrayList<>();
     }
 
-
+    // 下载商品详情
     private void downloadGoodsDetail(final int id) {
         OkHttpUtils<GoodsDetailBean> utils = new OkHttpUtils<>(this);
         utils.setRequestUrl(I.REQUEST_FIND_GOOD_DETAILS)
@@ -113,24 +148,26 @@ public class GoodsDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
-
+                        CommonUtils.showShortToast(error);
                     }
                 });
     }
 
+    // 下载图片
     private void downloadPicture() {
         goodsDetailFlowIndicator.setCount(albums.length);
         mCount = albums.length;
         for (int i = 0; i < albums.length; i++) {
             ImageView iv = new ImageView(this);
             Picasso.with(this)
-                    .load(I.DOWNLOAD_IMG_URL+albums[i].getImgUrl())
+                    .load(I.DOWNLOAD_IMG_URL + albums[i].getImgUrl())
                     .placeholder(R.drawable.nopic)
                     .into(iv);
             imageViews.add(iv);
         }
         myAdapter = new PictureAdapter(imageViews);
         mViewPager.setAdapter(myAdapter);
+        setThread();
     }
 
     @OnClick({R.id.iv_goodsDetail_back, R.id.iv_goodsDetail_cart, R.id.iv_goodsDetail_collect, R.id.iv_goodsDetail_share})
@@ -148,16 +185,6 @@ public class GoodsDetailActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
     class PictureAdapter extends PagerAdapter {
         ArrayList<ImageView> list;

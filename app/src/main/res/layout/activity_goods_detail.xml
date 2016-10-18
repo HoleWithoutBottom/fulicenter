@@ -93,11 +93,10 @@
             android:text="$293"
             android:textColor="@color/red" />
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/iv_goodsDetail_goods"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/category_child"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/goodsDetail_viewpager"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_gravity="center_horizontal"/>
 
     <cn.ucai.fulicenter.views.FlowIndicator

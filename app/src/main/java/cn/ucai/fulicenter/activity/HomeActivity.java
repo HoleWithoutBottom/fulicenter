@@ -1,25 +1,53 @@
 package cn.ucai.fulicenter.activity;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.fragment.BoutiqueFragment;
+import cn.ucai.fulicenter.fragment.NewGoodsFragment;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     RadioButton mRbCart, mRbNewGoods, mRbCategory, mRbBotique, mRbPersonal;
     TextView mTvCartHint;
-    boolean isCart;
+    FragmentManager manager;
+    NewGoodsFragment newGoodsFragment;
+    BoutiqueFragment boutiqueFragment;
+    ArrayList<Fragment> mFragmentList;
+    ViewPagerAdapter mAdapter;
+    ViewPager mViewPagerFragment;
+    int index;
+    RadioButton[] rbs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
-        mRbNewGoods.setChecked(true);
+        initFragment();
         setListener();
+    }
+
+    private void initFragment() {
+        mFragmentList = new ArrayList<>();
+        manager = getSupportFragmentManager();
+        newGoodsFragment = new NewGoodsFragment();
+        boutiqueFragment = new BoutiqueFragment();
+        mFragmentList.add(newGoodsFragment);
+        mFragmentList.add(boutiqueFragment);
+        // 开始默认进入新品界面
+        mRbNewGoods.setChecked(true);
+        mAdapter = new ViewPagerAdapter(manager);
+        mViewPagerFragment.setAdapter(mAdapter);
     }
 
     private void setListener() {
@@ -28,6 +56,23 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mRbCart.setOnClickListener(this);
         mRbNewGoods.setOnClickListener(this);
         mRbPersonal.setOnClickListener(this);
+        mViewPagerFragment.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                index = position;
+                setCheck();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void initView() {
@@ -37,45 +82,63 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mRbCategory = (RadioButton) findViewById(R.id.rbCategory);
         mRbPersonal = (RadioButton) findViewById(R.id.rbPersonal);
         mTvCartHint = (TextView) findViewById(R.id.tvCartHint);
+        mViewPagerFragment = (ViewPager) findViewById(R.id.fragment_viewPager);
+        rbs = new RadioButton[]{mRbNewGoods, mRbBotique, mRbCategory, mRbCart, mRbPersonal};
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rbBotique:
-                setCart();
+                index = 1;
+                setCheck();
+                mViewPagerFragment.setCurrentItem(index);
                 break;
             case R.id.rbCart:
-                setOtherRb();
-
+                index = 3;
+                setCheck();
                 break;
             case R.id.rbCategory:
-                setCart();
+                index = 2;
+                setCheck();
                 break;
             case R.id.rbNewGoods:
-                setCart();
+                index = 0;
+                setCheck();
+                mViewPagerFragment.setCurrentItem(index);
                 break;
             case R.id.rbPersonal:
-                setCart();
+                index = 4;
+                setCheck();
                 break;
         }
     }
 
-    private void setOtherRb() { // 如果上次点了不是购物车，就把他们设为false
-        if (!isCart) {
-            isCart = true;
-            mRbBotique.setChecked(false);
-            mRbPersonal.setChecked(false);
-            mRbNewGoods.setChecked(false);
-            mRbCategory.setChecked(false);
+
+    public void setCheck() {
+        for (int i = 0; i < rbs.length; i++) {
+            if (i == index) {
+                rbs[i].setChecked(true);
+            } else {
+                rbs[i].setChecked(false);
+            }
         }
     }
 
-    private void setCart() { //如果上次点了购物车，就把购物车的状态改为false
-        if (isCart) {
-            mRbCart.setChecked(false);
-            isCart = false;
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+
+        public ViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
         }
     }
-
 }

@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="#C0C0C0"
     app:cardElevation="5dp"
     android:foreground="?android:selectableItemBackground"
     android:clickable="true"
-    android:layout_margin="8dp"
+    android:layout_margin="10dp"
     >
 
     <RelativeLayout
+        android:id="@+id/newGoods_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#fff"
+        android:layout_margin="10dp"
         >
         <ImageView
             android:id="@+id/iv_newGoods"
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="200dp"
             android:src="@drawable/category_child" />
 
