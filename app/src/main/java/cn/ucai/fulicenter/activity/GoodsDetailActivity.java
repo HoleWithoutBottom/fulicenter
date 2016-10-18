@@ -1,15 +1,17 @@
 package cn.ucai.fulicenter.activity;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -43,25 +45,50 @@ public class GoodsDetailActivity extends AppCompatActivity {
     TextView tvGoodsDetailName;
     @Bind(R.id.tv_goodsDetail_price)
     TextView tvGoodsDetailPrice;
-    @Bind(R.id.iv_goodsDetail_goods)
-    ImageView ivGoodsDetailGoods;
+    @Bind(R.id.goodsDetail_viewpager)
+    ViewPager mViewPager;
     @Bind(R.id.goodsDetail_flowIndicator)
     FlowIndicator goodsDetailFlowIndicator;
     @Bind(R.id.tv_goodsDetails_Brief)
     TextView tvGoodsDetailsBrief;
-
+    int mFocus = -1;
+    int mCount;
+    AlbumsBean[] albums;
+    ArrayList<ImageView> imageViews;
+    PictureAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_detail);
         ButterKnife.bind(this);
-        int id = getIntent().getIntExtra("goodsId", 0);
-        downloadGoodsDetail(id);
+        initData();
         setListener();
     }
 
     private void setListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                goodsDetailFlowIndicator.setFocus(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void initData() {
+        int id = getIntent().getIntExtra("goodsId", 0);
+        downloadGoodsDetail(id);
+        imageViews = new ArrayList<>();
     }
 
 
@@ -79,8 +106,8 @@ public class GoodsDetailActivity extends AppCompatActivity {
                             tvGoodsDetailPrice.setText(result.getRankPrice());
                             tvGoodsDetailsBrief.setText(result.getGoodsBrief());
                             PropertiesBean[] properties = result.getProperties();
-                            AlbumsBean[] albums = properties[0].getAlbums();
-                            downloadPicture(albums);
+                            albums = properties[0].getAlbums();
+                            downloadPicture();
                         }
                     }
 
@@ -91,12 +118,19 @@ public class GoodsDetailActivity extends AppCompatActivity {
                 });
     }
 
-    private void downloadPicture(AlbumsBean[] albums) {
-
-        for (int i = 0; i < albums.length; i++) {
-            ImageLoader.downloadImg(this, ivGoodsDetailGoods, albums[i].getImgUrl());
-        }
+    private void downloadPicture() {
         goodsDetailFlowIndicator.setCount(albums.length);
+        mCount = albums.length;
+        for (int i = 0; i < albums.length; i++) {
+            ImageView iv = new ImageView(this);
+            Picasso.with(this)
+                    .load(I.DOWNLOAD_IMG_URL+albums[i].getImgUrl())
+                    .placeholder(R.drawable.nopic)
+                    .into(iv);
+            imageViews.add(iv);
+        }
+        myAdapter = new PictureAdapter(imageViews);
+        mViewPager.setAdapter(myAdapter);
     }
 
     @OnClick({R.id.iv_goodsDetail_back, R.id.iv_goodsDetail_cart, R.id.iv_goodsDetail_collect, R.id.iv_goodsDetail_share})
@@ -114,4 +148,43 @@ public class GoodsDetailActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    class PictureAdapter extends PagerAdapter {
+        ArrayList<ImageView> list;
+
+        public PictureAdapter(ArrayList<ImageView> list) {
+            this.list = list;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return object == view;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.addView(list.get(position));
+            return list.get(position);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView(list.get(position));
+        }
+    }
 }
