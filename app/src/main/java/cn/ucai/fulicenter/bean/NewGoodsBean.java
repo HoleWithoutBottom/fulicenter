@@ -24,6 +24,13 @@ public class NewGoodsBean {
     private long addTime;
     private boolean promote;
 
+    public boolean isPromote() {
+        return isPromote;
+    }
+    public void setAddTime(long addTime) {
+        this.addTime = addTime;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
