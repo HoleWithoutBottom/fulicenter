@@ -1,6 +1,8 @@
 package cn.ucai.fulicenter.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,10 @@ import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.BoutiqueCategoryActivity;
 import cn.ucai.fulicenter.bean.BoutiqueBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.MFGT;
 
 /**
  * Created by Administrator on 2016/10/18.
@@ -72,7 +76,7 @@ public class BoutiqueAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return;
         }
         BoutiqueHolder boutiqueHolder = (BoutiqueHolder) holder;
-        BoutiqueBean boutiqueBean = mList.get(position);
+        final BoutiqueBean boutiqueBean = mList.get(position);
         boutiqueHolder.tvDesc.setText(boutiqueBean.getDescription());
         boutiqueHolder.tvName.setText(boutiqueBean.getName());
         boutiqueHolder.tvTitle.setText(boutiqueBean.getTitle());
@@ -81,6 +85,15 @@ public class BoutiqueAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 .defaultPicture(R.drawable.nopic)
                 .imageView(boutiqueHolder.ivBoutique)
                 .showImage(context);
+        boutiqueHolder.linearLayoutBotique.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, BoutiqueCategoryActivity.class);
+                intent.putExtra("BoutiqueBeanId",boutiqueBean.getId());
+                intent.putExtra("BoutiqueBeanTitle",boutiqueBean.getName());
+                MFGT.startActivity(context,intent);
+            }
+        });
     }
 
     @Override
