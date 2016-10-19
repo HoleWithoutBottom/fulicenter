@@ -1,7 +1,6 @@
 package cn.ucai.fulicenter.fragment;
 
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,7 +23,7 @@ import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
 
-public class NewGoodsFragment extends Fragment{
+public class NewGoodsFragment extends Fragment {
     View view;
     SwipeRefreshLayout mSwipe;
     TextView mTvNewgoodsRefresh;
@@ -34,11 +33,14 @@ public class NewGoodsFragment extends Fragment{
     NewGoodsAdapter myAdapter;
     GridLayoutManager gridLayoutManager;
     int mNewState;
-
+    int cat_id = 0;
 
     public NewGoodsFragment() {
     }
 
+    public void setCat_id(int cat_id) {
+        this.cat_id = cat_id;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +61,6 @@ public class NewGoodsFragment extends Fragment{
         });
         setPullDown();
         setPullUp();
-
 
 
     }
@@ -109,7 +110,7 @@ public class NewGoodsFragment extends Fragment{
     private void downLoadNewGoods(final int action, int pageid) {
         final OkHttpUtils<NewGoodsBean[]> utils = new OkHttpUtils<>(getActivity());
         utils.setRequestUrl(I.REQUEST_FIND_NEW_BOUTIQUE_GOODS)
-                .addParam(I.GoodsDetails.KEY_CAT_ID, I.CAT_ID + "")
+                .addParam(I.GoodsDetails.KEY_CAT_ID, cat_id + "")
                 .addParam(I.PAGE_ID, pageid + "")
                 .addParam(I.PAGE_SIZE, 10 + "")
                 .targetClass(NewGoodsBean[].class)
@@ -118,13 +119,13 @@ public class NewGoodsFragment extends Fragment{
                     public void onSuccess(NewGoodsBean[] result) {
                         myAdapter.setMore(result != null && result.length > 0);
                         if (action == I.ACTION_PULL_UP) {
-                            if (myAdapter.isMore()) {
+                            if (!myAdapter.isMore()) {
                                 myAdapter.setFoot("没有更多数据了");
                             }
                             return;
                         }
                         ArrayList<NewGoodsBean> goodslist = utils.array2List(result);
-                        myAdapter.setFoot("下拉加载更多数据...");
+                        myAdapter.setFoot("上拉加载更多数据...");
                         if (result != null) {
                             switch (action) {
                                 case I.ACTION_DOWNLOAD:
@@ -146,6 +147,9 @@ public class NewGoodsFragment extends Fragment{
 
                     @Override
                     public void onError(String error) {
+                        mSwipe.setRefreshing(false);
+                        mTvNewgoodsRefresh.setVisibility(View.GONE);
+                        myAdapter.setMore(false);
                         CommonUtils.showShortToast(error);
                     }
                 });
