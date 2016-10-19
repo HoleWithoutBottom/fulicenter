@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/good_detail_title_bg"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_category_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/back_nomal" />
+
+        <TextView
+            android:id="@+id/tv_category_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="5dp"
+            android:drawableRight="@mipmap/arrow2_up"
+            android:text="美妆"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cart_buy_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_category_price_orderUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:drawableRight="@mipmap/arrow_order_up"
+            android:gravity="center"
+            android:text="价格"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_category_time_orderDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:drawableRight="@mipmap/arrow_order_down"
+            android:gravity="center"
+            android:text="上架时间"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_category_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="刷新中..."
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recycler_Category"/>
+</LinearLayout>
