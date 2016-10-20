@@ -41,10 +41,16 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableRight="@mipmap/arrow_order_up"
             android:gravity="center"
             android:text="价格"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
+        <ImageView
+            android:id="@+id/iv_price_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/arrow_order_up"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"/>
 
         <TextView
             android:id="@+id/tv_category_time_orderDown"
@@ -52,10 +58,16 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableRight="@mipmap/arrow_order_down"
             android:gravity="center"
             android:text="上架时间"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
+        <ImageView
+            android:id="@+id/iv_addTime_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/arrow_order_up"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"/>
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
