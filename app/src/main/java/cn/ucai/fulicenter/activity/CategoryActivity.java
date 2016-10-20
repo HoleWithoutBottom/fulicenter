@@ -23,7 +23,6 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.adapter.NewGoodsAdapter;
 import cn.ucai.fulicenter.bean.NewGoodsBean;
 import cn.ucai.fulicenter.utils.CommonUtils;
-import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
@@ -50,6 +49,13 @@ public class CategoryActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeCategory;
     Comparator<NewGoodsBean> comparatorPrice;
     Comparator<NewGoodsBean> comparatorAddTime;
+    boolean isPriceUp = false;
+    boolean isAddTimeUp = false;
+    @Bind(R.id.iv_price_order)
+    ImageView ivPriceOrder;
+    @Bind(R.id.iv_addTime_order)
+    ImageView ivAddTimeOrder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,28 +71,40 @@ public class CategoryActivity extends AppCompatActivity {
         comparatorPrice = new Comparator<NewGoodsBean>() {
             @Override
             public int compare(NewGoodsBean newGoodsBean1, NewGoodsBean newGoodsBean2) {
-                String shopPrice2 = newGoodsBean2.getShopPrice();
+                /*String shopPrice2 = newGoodsBean2.getShopPrice();
                 String shopPrice1 = newGoodsBean1.getShopPrice();
-                int i =0;
-                int j =0;
+                int i = 0;
+                int j = 0;
                 Pattern pattern = Pattern.compile("[0-9]");
                 Matcher matcher = pattern.matcher(shopPrice1);
-                if (matcher.find()){
-                    i=shopPrice1.indexOf(matcher.group());
+                if (matcher.find()) {
+                    i = shopPrice1.indexOf(matcher.group());
                 }
-                matcher=pattern.matcher(shopPrice2);
-                if (matcher.find()){
-                    j=shopPrice2.indexOf(matcher.group());
+                matcher = pattern.matcher(shopPrice2);
+                if (matcher.find()) {
+                    j = shopPrice2.indexOf(matcher.group());
+                }*/
+                String currencyPrice1 = newGoodsBean1.getCurrencyPrice();
+                String currencyPrice2 = newGoodsBean2.getCurrencyPrice();
+                int i = currencyPrice1.indexOf("￥") + 1;
+                int j = currencyPrice2.indexOf("￥") + 1;
+                if (isPriceUp) {
+                    return Integer.parseInt(currencyPrice1.substring(i)) - Integer.parseInt(currencyPrice2.substring(j));
+                } else {
+                    return Integer.parseInt(currencyPrice2.substring(j)) - Integer.parseInt(currencyPrice1.substring(i));
                 }
-                return Integer.parseInt(shopPrice1.substring(i)) - Integer.parseInt(shopPrice2.substring(j));
             }
         };
-        comparatorAddTime=new Comparator<NewGoodsBean>() {
+        comparatorAddTime = new Comparator<NewGoodsBean>() {
             @Override
             public int compare(NewGoodsBean newGoodsBean1, NewGoodsBean newGoodsBean2) {
                 //L.e(newGoodsBean1.getAddTime()+":"+newGoodsBean2.getAddTime());
                 long l = newGoodsBean2.getAddTime() - newGoodsBean1.getAddTime();
-                return (int)l;
+                if (isAddTimeUp) {
+                    return (int) l;
+                } else {
+                    return -(int) l;
+                }
             }
         };
     }
@@ -200,12 +218,25 @@ public class CategoryActivity extends AppCompatActivity {
                 MFGT.finish(this);
                 break;
             case R.id.tv_category_price_orderUp:
+                if (isPriceUp) {
+                    ivPriceOrder.setImageResource(R.mipmap.arrow_order_down);
+                    isPriceUp = !isPriceUp;
+                } else {
+                    isPriceUp = !isPriceUp;
+                    ivPriceOrder.setImageResource(R.mipmap.arrow_order_up);
+                }
                 Collections.sort(mNewGoodsBeanList, comparatorPrice);
                 mAdapter.initGoodsList(mNewGoodsBeanList);
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.tv_category_time_orderDown:
-                L.e("sb");
+                if (isAddTimeUp) {
+                    ivAddTimeOrder.setImageResource(R.mipmap.arrow_order_down);
+                    isAddTimeUp = !isAddTimeUp;
+                } else {
+                    ivAddTimeOrder.setImageResource(R.mipmap.arrow_order_up);
+                    isAddTimeUp = !isAddTimeUp;
+                }
                 Collections.sort(mNewGoodsBeanList, comparatorAddTime);
                 mAdapter.initGoodsList(mNewGoodsBeanList);
                 mAdapter.notifyDataSetChanged();
