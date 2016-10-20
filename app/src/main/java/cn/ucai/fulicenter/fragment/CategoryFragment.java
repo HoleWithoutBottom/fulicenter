@@ -57,6 +57,22 @@ public class CategoryFragment extends Fragment {
         initData();
         setListener();
         return view;
+
+    }
+
+    private void setListener() {
+
+        categoryElv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+                CategoryChildBean child =  mAdapter.getChild(i, i1);
+                Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                intent.putExtra("goodsId", child.getId());
+                intent.putExtra("name", child.getName());
+                MFGT.startActivity(getActivity(), intent);
+                return false;
+            }
+        });
         /*categoryElv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -70,18 +86,6 @@ public class CategoryFragment extends Fragment {
         });*/
     }
 
-    private void setListener() {
-        categoryElv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                CategoryChildBean child = (CategoryChildBean) mAdapter.getChild(i, i1);
-                Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                intent.putExtra("goodsId", child.getId());
-                MFGT.startActivity(getActivity(), intent);
-                return false;
-            }
-        });
-    }
 
     private void initData() {
         mGroupList = new ArrayList<>();
@@ -130,6 +134,7 @@ public class CategoryFragment extends Fragment {
                         if (result != null && result.length > 0) {
                             ArrayList<CategoryGroupBean> categoryList = utils.array2List(result);
                             mGroupList = categoryList;
+
                             downloadChildList(mGroupList);
                         }
                     }
@@ -153,6 +158,8 @@ public class CategoryFragment extends Fragment {
         ArrayList<CategoryGroupBean> groupList;
         ArrayList<ArrayList<CategoryChildBean>> childList;
 
+
+
         public CategoryAdapter(Context context, ArrayList<CategoryGroupBean> groupList, ArrayList<ArrayList<CategoryChildBean>> childList) {
             this.context = context;
             this.groupList = groupList;
@@ -161,22 +168,23 @@ public class CategoryFragment extends Fragment {
 
         @Override
         public int getGroupCount() {
-            return groupList.size();
+            return groupList != null ? groupList.size() : 0;
         }
 
         @Override
         public int getChildrenCount(int i) {
-            return childList.get(i).size();
+            return childList != null && childList.get(i) != null ? childList.get(i).size() : 0;
+
         }
 
         @Override
-        public Object getGroup(int i) {
-            return groupList.get(i);
+        public CategoryGroupBean getGroup(int i) {
+            return groupList != null ? groupList.get(i) : null;
         }
 
         @Override
-        public Object getChild(int i, int i1) {
-            return childList.get(i).get(i1);
+        public CategoryChildBean getChild(int i, int i1) {
+            return childList != null && childList.get(i) != null ? childList.get(i).get(i1) : null;
         }
 
         @Override
@@ -197,10 +205,6 @@ public class CategoryFragment extends Fragment {
         class GroupViewHolder {
             ImageView ivGroup, ivExpand;
             TextView tvGroupName;
-
-            public GroupViewHolder() {
-
-            }
         }
 
         class ChildViewHolder {
@@ -222,12 +226,15 @@ public class CategoryFragment extends Fragment {
             } else {
                 holder = (GroupViewHolder) view.getTag();
             }
-            ImageLoader.downloadImg(context, holder.ivGroup, groupList.get(i).getImageUrl());
-            holder.tvGroupName.setText(groupList.get(i).getName());
-            if (b) {
-                holder.ivExpand.setImageResource(R.mipmap.expand_off);
-            } else {
-                holder.ivExpand.setImageResource(R.mipmap.expand_on);
+            CategoryGroupBean group = getGroup(i);
+            if (group != null) {
+                ImageLoader.downloadImg(context, holder.ivGroup, group.getImageUrl());
+                holder.tvGroupName.setText(group.getName());
+                if (b) {
+                    holder.ivExpand.setImageResource(R.mipmap.expand_off);
+                } else {
+                    holder.ivExpand.setImageResource(R.mipmap.expand_on);
+                }
             }
             return view;
         }
@@ -245,8 +252,11 @@ public class CategoryFragment extends Fragment {
             } else {
                 holder = (ChildViewHolder) view.getTag();
             }
-            holder.tvChildName.setText(childList.get(i).get(i1).getName());
-            ImageLoader.downloadImg(context, holder.ivChild, childList.get(i).get(i1).getImageUrl());
+            CategoryChildBean child = getChild(i, i1);
+            if (child != null) {
+                holder.tvChildName.setText(child.getName());
+                ImageLoader.downloadImg(context, holder.ivChild, child.getImageUrl());
+            }
             return view;
         }
 
