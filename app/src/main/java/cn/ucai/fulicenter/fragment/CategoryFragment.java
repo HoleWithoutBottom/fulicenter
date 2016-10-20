@@ -65,7 +65,7 @@ public class CategoryFragment extends Fragment {
         categoryElv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                CategoryChildBean child =  mAdapter.getChild(i, i1);
+                CategoryChildBean child = mAdapter.getChild(i, i1);
                 Intent intent = new Intent(getActivity(), CategoryActivity.class);
                 intent.putExtra("goodsId", child.getId());
                 intent.putExtra("name", child.getName());
@@ -97,29 +97,28 @@ public class CategoryFragment extends Fragment {
         // categoryElv.setAdapter(mAdapter);
     }
 
-    private void downloadChildList(ArrayList<CategoryGroupBean> mGroupList) {
+    private void downloadChildList(int parentId, final int index) {
         final OkHttpUtils<CategoryChildBean[]> utils = new OkHttpUtils<>(getActivity());
-        for (int i = 0; i < mGroupList.size(); i++) {
-            SystemClock.sleep(100);
-            utils.setRequestUrl(I.REQUEST_FIND_CATEGORY_CHILDREN)
-                    .addParam(I.CategoryChild.PARENT_ID, mGroupList.get(i).getId() + "")
-                    .addParam(I.PAGE_ID, I.PAGE_ID_DEFAULT + "")
-                    .addParam(I.PAGE_SIZE, 20 + "")
-                    .targetClass(CategoryChildBean[].class)
-                    .execute(new OkHttpUtils.OnCompleteListener<CategoryChildBean[]>() {
-                        @Override
-                        public void onSuccess(CategoryChildBean[] result) {
-                            if (result != null && result.length > 0) {
-                                mChildList.add(utils.array2List(result));
-                            }
+        // SystemClock.sleep(100);
+        utils.setRequestUrl(I.REQUEST_FIND_CATEGORY_CHILDREN)
+                .addParam(I.CategoryChild.PARENT_ID, parentId + "")
+                .addParam(I.PAGE_ID, I.PAGE_ID_DEFAULT + "")
+                .addParam(I.PAGE_SIZE, 20 + "")
+                .targetClass(CategoryChildBean[].class)
+                .execute(new OkHttpUtils.OnCompleteListener<CategoryChildBean[]>() {
+                    @Override
+                    public void onSuccess(CategoryChildBean[] result) {
+                        if (result != null && result.length > 0) {
+                            mChildList.set(index, utils.array2List(result));
                         }
+                    }
 
-                        @Override
-                        public void onError(String error) {
+                    @Override
+                    public void onError(String error) {
 
-                        }
-                    });
-        }
+                    }
+                });
+
         mAdapter = new CategoryAdapter(getActivity(), mGroupList, mChildList);
         categoryElv.setAdapter(mAdapter);
     }
@@ -134,8 +133,11 @@ public class CategoryFragment extends Fragment {
                         if (result != null && result.length > 0) {
                             ArrayList<CategoryGroupBean> categoryList = utils.array2List(result);
                             mGroupList = categoryList;
-
-                            downloadChildList(mGroupList);
+                            for (int i = 0; i < mGroupList.size(); i++) {
+                                CategoryGroupBean bean = mGroupList.get(i);
+                                mChildList.add(new ArrayList<CategoryChildBean>());
+                                downloadChildList(bean.getId(), i);
+                            }
                         }
                     }
 
@@ -157,7 +159,6 @@ public class CategoryFragment extends Fragment {
         Context context;
         ArrayList<CategoryGroupBean> groupList;
         ArrayList<ArrayList<CategoryChildBean>> childList;
-
 
 
         public CategoryAdapter(Context context, ArrayList<CategoryGroupBean> groupList, ArrayList<ArrayList<CategoryChildBean>> childList) {
