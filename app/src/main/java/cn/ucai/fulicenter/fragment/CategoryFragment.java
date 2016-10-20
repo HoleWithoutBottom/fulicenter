@@ -66,9 +66,11 @@ public class CategoryFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 CategoryChildBean child = mAdapter.getChild(i, i1);
+                ArrayList<CategoryChildBean> childs = mAdapter.childList.get(i);
                 Intent intent = new Intent(getActivity(), CategoryActivity.class);
                 intent.putExtra("goodsId", child.getId());
-                intent.putExtra("name", child.getName());
+                intent.putExtra("name", mAdapter.getGroup(i).getName());
+                intent.putExtra("childList", childs);
                 MFGT.startActivity(getActivity(), intent);
                 return false;
             }

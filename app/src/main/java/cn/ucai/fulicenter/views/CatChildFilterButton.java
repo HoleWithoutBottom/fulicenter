@@ -1,4 +1,3 @@
-/*
 package cn.ucai.fulicenter.views;
 
 import android.content.Context;
@@ -22,17 +21,17 @@ import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.activity.CategoryChildActivity;
+import cn.ucai.fulicenter.activity.CategoryActivity;
 import cn.ucai.fulicenter.bean.CategoryChildBean;
+import cn.ucai.fulicenter.utils.ConvertUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
-import cn.ucai.fulicenter.utils.Utils;
 
-*/
 /**
  * 显示分类中当前所属小类的列表
- * @author yao
  *
- *//*
+ * @author yao
+ **/
+
 
 public class CatChildFilterButton extends Button {
     Context mContext;
@@ -42,29 +41,28 @@ public class CatChildFilterButton extends Button {
     CatFilterAdapter mAdapter;
     OnClickListener mListener;
 
-    */
-/**
+    /**
      * true:arrow down
      * false:arrow up
-     * *//*
+     */
 
     boolean mExpandOff;
 
     public CatChildFilterButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext=context;
-        mbtnTop=this;
-        mExpandOff=true;
+        mContext = context;
+        mbtnTop = this;
+        mExpandOff = true;
         initGridView();
     }
 
     private void initPopupWindow() {
-        mPopupWindow=new PopupWindow();
+        mPopupWindow = new PopupWindow();
         mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        if(mgvCategory.getAdapter().getCount()<16){
+        if (mgvCategory.getAdapter().getCount() < 16) {
             mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-        }else{
-            mPopupWindow.setHeight(Utils.px2dp(mContext, 200));
+        } else {
+            mPopupWindow.setHeight(ConvertUtils.px2dp(mContext, 1000));
         }
         mPopupWindow.setTouchable(true);
         mPopupWindow.setOutsideTouchable(true);
@@ -74,10 +72,10 @@ public class CatChildFilterButton extends Button {
     }
 
     private void initGridView() {
-        mgvCategory=new GridView(mContext);
-        mgvCategory.setColumnWidth(Utils.px2dp(mContext, 1500));
-        mgvCategory.setHorizontalSpacing(Utils.px2dp(mContext, 10));
-        mgvCategory.setVerticalSpacing(Utils.px2dp(mContext, 10));
+        mgvCategory = new GridView(mContext);
+        mgvCategory.setColumnWidth(ConvertUtils.px2dp(mContext, 1500));
+        mgvCategory.setHorizontalSpacing(ConvertUtils.px2dp(mContext, 10));
+        mgvCategory.setVerticalSpacing(ConvertUtils.px2dp(mContext, 10));
         mgvCategory.setNumColumns(GridView.AUTO_FIT);
         mgvCategory.setBackgroundColor(Color.TRANSPARENT);
         mgvCategory.setPadding(3, 3, 3, 3);
@@ -85,23 +83,23 @@ public class CatChildFilterButton extends Button {
     }
 
     private void setBtnTopArrow() {
-        Drawable right=null;
-        if(mExpandOff){
-            right=mContext.getResources().getDrawable(R.drawable.arrow2_down);
-        }else{
-            right=mContext.getResources().getDrawable(R.drawable.arrow2_up);
+        Drawable right = null;
+        if (mExpandOff) {
+            right = mContext.getResources().getDrawable(R.drawable.arrow2_down);
+        } else {
+            right = mContext.getResources().getDrawable(R.drawable.arrow2_up);
         }
         right.setBounds(0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
         mbtnTop.setCompoundDrawablesWithIntrinsicBounds(null, null, right, null);
-        mExpandOff=!mExpandOff;
+        mExpandOff = !mExpandOff;
     }
 
-    */
-/**
+    /**
      * 显示分类列表的适配器
-     * @author yao
      *
-     *//*
+     * @author yao
+     **/
+
 
     class CatFilterAdapter extends BaseAdapter {
         Context context;
@@ -116,7 +114,7 @@ public class CatChildFilterButton extends Button {
 
         @Override
         public int getCount() {
-            return Children==null?0:Children.size();
+            return Children == null ? 0 : Children.size();
         }
 
         @Override
@@ -126,73 +124,73 @@ public class CatChildFilterButton extends Button {
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
+            return position;
         }
 
         @Override
-        public View getView(int position, View layout, final ViewGroup parent) {
-            ViewChildHolder holder=null;
-            if(layout==null){
-                layout= View.inflate(context, R.layout.item_cat_filter, null);
-                holder=new ViewChildHolder();
-                holder.layoutItem=(RelativeLayout) layout.findViewById(R.id.layout_category_child);
-                holder.ivThumb=(ImageView) layout.findViewById(R.id.ivCategoryChildThumb);
-                holder.tvChildName=(TextView) layout.findViewById(R.id.tvCategoryChildName);
+        public View getView(final int position, View layout, final ViewGroup parent) {
+            ViewChildHolder holder = null;
+            if (layout == null) {
+                layout = View.inflate(context, R.layout.item_cat_filter, null);
+                holder = new ViewChildHolder();
+                holder.layoutItem = (RelativeLayout) layout.findViewById(R.id.layout_category_child);
+                holder.ivThumb = (ImageView) layout.findViewById(R.id.ivCategoryChildThumb);
+                holder.tvChildName = (TextView) layout.findViewById(R.id.tvCategoryChildName);
                 layout.setTag(holder);
-            }else{
-                holder=(ViewChildHolder) layout.getTag();
+            } else {
+                holder = (ViewChildHolder) layout.getTag();
             }
-            final CategoryChildBean child =getItem(position);
-            String name=child.getName();
+            final CategoryChildBean child = getItem(position);
+            String name = child.getName();
             holder.tvChildName.setText(name);
-            String imgUrl=child.getImageUrl();
-            ImageLoader.downloadImg(context,holder.ivThumb,imgUrl);
+            String imgUrl = child.getImageUrl();
+            ImageLoader.downloadImg(context, holder.ivThumb, imgUrl);
 
             holder.layoutItem.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mPopupWindow.isShowing()){
+                    if (mPopupWindow.isShowing()) {
                         mPopupWindow.dismiss();
                     }
-                    Intent intent=new Intent(mContext, CategoryChildActivity.class);
-                    intent.putExtra(I.CategoryChild.CAT_ID, child.getId());
+                    Intent intent = new Intent(mContext, CategoryActivity.class);
+                    intent.putExtra("goodsId", child.getId());
+                    intent.putExtra("name", mbtnTop.getText().toString());
                     intent.putExtra("childList", Children);
-                    intent.putExtra(I.CategoryGroup.NAME, mbtnTop.getText().toString());
                     mContext.startActivity(intent);
-                    ((CategoryChildActivity)mContext).finish();
+                    ((CategoryActivity) mContext).finish();
                 }
             });
             return layout;
         }
 
-        class ViewChildHolder{
+        class ViewChildHolder {
             RelativeLayout layoutItem;
             ImageView ivThumb;
             TextView tvChildName;
         }
     }
 
-    */
-/**
+    /**
      * 设置分类列表的下拉按钮单击事件监听
+     *
      * @param groupName
      * @param childList
-     *//*
+     */
+
 
     public void setOnCatFilterClickListener(final String groupName,
-                                            final ArrayList<CategoryChildBean> childList){
+                                            final ArrayList<CategoryChildBean> childList) {
         mbtnTop.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mbtnTop.setTextColor(Color.WHITE);
                 mbtnTop.setText(groupName);
-                if(mExpandOff){//若分类列表的窗口未打开，则弹出窗口
-                    mAdapter=new CatFilterAdapter(mContext, childList);
+                if (mExpandOff) {//若分类列表的窗口未打开，则弹出窗口
+                    mAdapter = new CatFilterAdapter(mContext, childList);
                     mgvCategory.setAdapter(mAdapter);
                     initPopupWindow();
-                }else{//否则，关闭窗口
-                    if(mPopupWindow.isShowing()){
+                } else {//否则，关闭窗口
+                    if (mPopupWindow.isShowing()) {
                         mPopupWindow.dismiss();
                     }
                 }
@@ -201,4 +199,3 @@ public class CatChildFilterButton extends Button {
         });
     }
 }
-*/

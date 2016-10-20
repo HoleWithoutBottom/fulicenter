@@ -78,7 +78,7 @@ public class NewGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final NewGoodsViewHolder newGoodsHolder = (NewGoodsViewHolder) holder;
             final NewGoodsBean goodsBean = mlist.get(position);
             newGoodsHolder.tvName.setText(goodsBean.getGoodsName());
-            newGoodsHolder.tvPrice.setText(goodsBean.getPromotePrice());
+            newGoodsHolder.tvPrice.setText(goodsBean.getCurrencyPrice());
             String url = I.SERVER_ROOT + I.REQUEST_DOWNLOAD_IMAGE;
             ImageLoader.build(url)
                     .addParam(I.IMAGE_URL, goodsBean.getGoodsThumb())

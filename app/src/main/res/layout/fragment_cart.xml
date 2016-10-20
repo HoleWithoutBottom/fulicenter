@@ -24,6 +24,7 @@
             android:layout_below="@id/tv_total"
             android:layout_alignLeft="@id/tv_total"/>
         <Button
+            android:id="@+id/btn_cart_buy"
             android:layout_width="100dp"
             android:layout_height="80dp"
             android:layout_alignParentRight="true"

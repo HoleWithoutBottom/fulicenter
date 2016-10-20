@@ -15,18 +15,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:src="@mipmap/back_nomal" />
+            android:src="@mipmap/back_nomal"
+            android:layout_centerVertical="true"/>
 
-        <TextView
-            android:id="@+id/tv_category_title"
+        <cn.ucai.fulicenter.views.CatChildFilterButton
+            android:id="@+id/btn_category_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="5dp"
             android:drawableRight="@mipmap/arrow2_up"
             android:text="美妆"
             android:textColor="#fff"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:background="@null"
+            />
     </RelativeLayout>
 
     <LinearLayout

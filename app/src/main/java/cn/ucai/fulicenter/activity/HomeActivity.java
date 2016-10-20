@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.fragment.BoutiqueFragment;
+import cn.ucai.fulicenter.fragment.CartFragment;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.NewGoodsFragment;
 
@@ -24,6 +25,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     NewGoodsFragment newGoodsFragment;
     BoutiqueFragment boutiqueFragment;
     CategoryFragment categoryFragment;
+    CartFragment cartFragment;
     ArrayList<Fragment> mFragmentList;
     ViewPagerAdapter mAdapter;
     ViewPager mViewPagerFragment;
@@ -45,9 +47,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         newGoodsFragment = new NewGoodsFragment();
         boutiqueFragment = new BoutiqueFragment();
         categoryFragment = new CategoryFragment();
+        cartFragment = new CartFragment();
         mFragmentList.add(newGoodsFragment);
         mFragmentList.add(boutiqueFragment);
         mFragmentList.add(categoryFragment);
+        mFragmentList.add(cartFragment);
         // 开始默认进入新品界面
         mRbNewGoods.setChecked(true);
         mAdapter = new ViewPagerAdapter(manager);
@@ -101,6 +105,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.rbCart:
                 index = 3;
                 setCheck();
+                mViewPagerFragment.setCurrentItem(index);
                 break;
             case R.id.rbCategory:
                 index = 2;

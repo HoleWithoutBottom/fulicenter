@@ -64,10 +64,12 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/tv_cart_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="单价啊"
+        android:layout_marginRight="10dp"
         android:textColor="@color/orange"
         android:textSize="20sp" />
 </LinearLayout>

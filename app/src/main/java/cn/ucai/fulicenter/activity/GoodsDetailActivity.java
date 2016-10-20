@@ -1,5 +1,6 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.AlbumsBean;
@@ -60,6 +62,7 @@ public class GoodsDetailActivity extends AppCompatActivity {
     ArrayList<ImageView> imageViews;
     PictureAdapter myAdapter;
     int mCount = 0;
+    GoodsDetailBean goodsDetailBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +139,7 @@ public class GoodsDetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(GoodsDetailBean result) {
                         if (result != null) {
+                            goodsDetailBean = result;
                             tvGoodsDetailEnglisheName.setText(result.getGoodsEnglishName());
                             tvGoodsDetailName.setText(result.getGoodsName());
                             tvGoodsDetailPrice.setText(result.getRankPrice());
@@ -177,6 +181,8 @@ public class GoodsDetailActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.iv_goodsDetail_cart:
+                FuLiCenterApplication.detailBeenList.add(goodsDetailBean);
+                // L.e("sb"+FuLiCenterApplication.goodsDetailBean.toString());
                 break;
             case R.id.iv_goodsDetail_collect:
                 break;

@@ -6,14 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,17 +20,19 @@ import butterknife.OnClick;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.adapter.NewGoodsAdapter;
+import cn.ucai.fulicenter.bean.CategoryChildBean;
 import cn.ucai.fulicenter.bean.NewGoodsBean;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
+import cn.ucai.fulicenter.views.CatChildFilterButton;
 
 public class CategoryActivity extends AppCompatActivity {
 
     @Bind(R.id.iv_category_back)
     ImageView ivCategoryBack;
-    @Bind(R.id.tv_category_title)
-    TextView tvCategoryTitle;
+    @Bind(R.id.btn_category_title)
+    CatChildFilterButton btnCategoryTitle;
     @Bind(R.id.tv_category_price_orderUp)
     TextView tvCategoryPriceOrderUp;
     @Bind(R.id.tv_category_time_orderDown)
@@ -55,6 +56,8 @@ public class CategoryActivity extends AppCompatActivity {
     ImageView ivPriceOrder;
     @Bind(R.id.iv_addTime_order)
     ImageView ivAddTimeOrder;
+    ArrayList<CategoryChildBean> childList;
+    String groupname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,13 +143,16 @@ public class CategoryActivity extends AppCompatActivity {
                 }
             }
         });
+        btnCategoryTitle.setOnCatFilterClickListener(groupname, childList);
     }
 
     private void initData() {
         mNewGoodsBeanList = new ArrayList<>();
+        childList = new ArrayList<>();
         catId = getIntent().getIntExtra("goodsId", 1);
-        String name = getIntent().getStringExtra("name");
-        tvCategoryTitle.setText(name);
+        groupname = getIntent().getStringExtra("name");
+        childList = (ArrayList<CategoryChildBean>) getIntent().getSerializableExtra("childList");
+        btnCategoryTitle.setText(groupname);
         if (catId != 1) {
             downloadNewGoodsBeanList(catId, I.ACTION_DOWNLOAD, mPageID);
         } else {
@@ -208,13 +214,10 @@ public class CategoryActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.iv_category_back, R.id.tv_category_title, R.id.tv_category_price_orderUp, R.id.tv_category_time_orderDown})
+    @OnClick({R.id.iv_category_back, R.id.btn_category_title, R.id.tv_category_price_orderUp, R.id.tv_category_time_orderDown})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_category_back:
-                MFGT.finish(this);
-                break;
-            case R.id.tv_category_title:
                 MFGT.finish(this);
                 break;
             case R.id.tv_category_price_orderUp:
