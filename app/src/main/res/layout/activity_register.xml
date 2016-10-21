@@ -60,7 +60,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:drawableRight="@drawable/icon_pwd"
-        android:hint="密码" />
+        android:hint="密码"
+        android:inputType="textPassword"
+        />
 
     <EditText
         android:id="@+id/etConfirmPassword_register"
@@ -69,6 +71,7 @@
         android:layout_margin="5dp"
         android:drawableRight="@drawable/icon_pwd"
         android:hint="确认密码"
+        android:inputType="textPassword"
         />
 
     <Button
