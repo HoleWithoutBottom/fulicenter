@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -68,6 +69,12 @@ public class CartFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
@@ -91,12 +98,38 @@ public class CartFragment extends Fragment {
             tvGoodsName = (TextView) itemView.findViewById(R.id.tv_cart_goodsName);
             tvGoodsCount = (TextView) itemView.findViewById(R.id.tv_cart_count);
             tvGoodsPrice = (TextView) itemView.findViewById(R.id.tv_cart_price);
+            // 增加商品数量
+            ivAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String goodsCount = tvGoodsCount.getText().toString();
+                    String substring = goodsCount.substring(1, goodsCount.length() - 1);
+                    int count = Integer.parseInt(substring) + 1;
+                    tvGoodsCount.setText("(" + count + ")");
+                }
+            });
+            // 减少商品数量
+            ivDec.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String goodsCount = tvGoodsCount.getText().toString();
+                    String substring = goodsCount.substring(1, goodsCount.length() - 1);
+                    int count = Integer.parseInt(substring) - 1;
+                    if (count == 0) {
+                        mAdapter.decCount(mAdapter.getPosition());
+                        return;
+                    }
+                    tvGoodsCount.setText("(" + count + ")");
+                }
+            });
         }
+
     }
 
     class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         ArrayList<GoodsDetailBean> mList;
         Context context;
+        int position;
 
         public CartAdapter(ArrayList<GoodsDetailBean> mList, Context context) {
             this.mList = mList;
@@ -117,6 +150,7 @@ public class CartFragment extends Fragment {
             holder.tvGoodsName.setText(detailBean.getGoodsName());
             holder.tvGoodsCount.setText("(" + 1 + ")");
             ImageLoader.downloadImg(context, holder.ivCart, detailBean.getGoodsThumb());
+            this.position = position;
         }
 
         @Override
@@ -124,12 +158,23 @@ public class CartFragment extends Fragment {
             return mList != null ? mList.size() : 0;
         }
 
+        public int getPosition() {
+            return position;
+        }
+
         public void addCount(int position) {
 
         }
 
         public void decCount(int position) {
-
+            mList.remove(position);
+            notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 }

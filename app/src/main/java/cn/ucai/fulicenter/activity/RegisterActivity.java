@@ -50,13 +50,13 @@ public class RegisterActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_register_back:
-
+                MFGT.finish(this);
                 break;
             case R.id.btn_register:
-                final String userName = etUserNameRegister.getText().toString();
-                String nickName = etNickNameRegister.getText().toString();
-                String password = etPasswordRegister.getText().toString();
-                String confirmPassword = etConfirmPasswordRegister.getText().toString();
+                final String userName = etUserNameRegister.getText().toString().trim();
+                String nickName = etNickNameRegister.getText().toString().trim();
+                String password = etPasswordRegister.getText().toString().trim();
+                String confirmPassword = etConfirmPasswordRegister.getText().toString().trim();
                 if (userName == null || userName.length() == 0) {
                     CommonUtils.showShortToast("请输入账号");
                     etUserNameRegister.requestFocus();
@@ -100,9 +100,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (result != null) {
                                     if (result.getRetCode() == 0) {
                                         CommonUtils.showShortToast("注册成功!");
-                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                        intent.putExtra("userName",userName);
-                                        MFGT.startActivity(RegisterActivity.this,intent);
+                                        setResult(RESULT_OK,new Intent().putExtra("userName",userName));
+                                        MFGT.finish(RegisterActivity.this);
                                     }else if (result.getRetCode()==102){
                                         CommonUtils.showShortToast("该账号已存在！");
                                     }else {

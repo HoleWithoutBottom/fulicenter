@@ -1,5 +1,6 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,12 +13,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.MainActivity;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.fragment.CartFragment;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.NewGoodsFragment;
 import cn.ucai.fulicenter.fragment.PersonalFragment;
+import cn.ucai.fulicenter.utils.MFGT;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     RadioButton mRbCart, mRbNewGoods, mRbCategory, mRbBotique, mRbPersonal;
@@ -78,6 +82,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onPageSelected(int position) {
                 index = position;
                 setCheck();
+                if (index==4){
+                    if (FuLiCenterApplication.userAvatar == null) {
+                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                        MFGT.startActivity(HomeActivity.this, intent);
+                        return;
+                    }
+                }
             }
 
             @Override
@@ -122,6 +133,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 mViewPagerFragment.setCurrentItem(index);
                 break;
             case R.id.rbPersonal:
+                if (FuLiCenterApplication.userAvatar == null) {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    MFGT.startActivity(this, intent);
+                    return;
+                }
                 index = 4;
                 setCheck();
                 mViewPagerFragment.setCurrentItem(index);

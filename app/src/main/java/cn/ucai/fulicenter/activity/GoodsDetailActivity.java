@@ -183,6 +183,7 @@ public class GoodsDetailActivity extends AppCompatActivity {
                 break;
             case R.id.iv_goodsDetail_cart:
                 FuLiCenterApplication.detailBeenList.add(goodsDetailBean);
+
                 // L.e("sb"+FuLiCenterApplication.goodsDetailBean.toString());
                 break;
             case R.id.iv_goodsDetail_collect:
