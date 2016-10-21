@@ -40,20 +40,22 @@
         android:src="@drawable/divide_line_bg" />
 
     <EditText
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivDivide"
         android:layout_weight="1"
-        android:drawableRight="@drawable/user_48px"
+        android:drawableRight="@drawable/icon_account"
         android:hint="用户名"
         android:id="@+id/etUserName"/>
 
     <EditText
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etPassword"
         android:layout_below="@id/etUserName"
-        android:drawableRight="@drawable/password_48px"
+        android:drawableRight="@drawable/icon_pwd"
         android:hint="密码"/>
     <Button
         android:layout_marginTop="10dp"
