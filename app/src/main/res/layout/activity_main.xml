@@ -56,7 +56,9 @@
         android:id="@+id/etPassword"
         android:layout_below="@id/etUserName"
         android:drawableRight="@drawable/icon_pwd"
-        android:hint="密码"/>
+        android:hint="密码"
+        android:inputType="textPassword"
+        />
     <Button
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
