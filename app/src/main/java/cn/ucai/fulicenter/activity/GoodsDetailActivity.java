@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -38,7 +39,7 @@ public class GoodsDetailActivity extends AppCompatActivity {
     @Bind(R.id.iv_goodsDetail_back)
     ImageView ivGoodsDetailBack;
     @Bind(R.id.iv_goodsDetail_cart)
-    ImageView ivGoodsDetailCart;
+    RadioButton ivGoodsDetailCart;
     @Bind(R.id.tv_goodDetail_cart_hint)
     TextView tvGoodDetailCartHint;
     @Bind(R.id.iv_goodsDetail_collect)

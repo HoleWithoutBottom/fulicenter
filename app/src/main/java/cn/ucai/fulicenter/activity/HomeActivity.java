@@ -17,6 +17,7 @@ import cn.ucai.fulicenter.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.fragment.CartFragment;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.NewGoodsFragment;
+import cn.ucai.fulicenter.fragment.PersonalFragment;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     RadioButton mRbCart, mRbNewGoods, mRbCategory, mRbBotique, mRbPersonal;
@@ -26,6 +27,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     BoutiqueFragment boutiqueFragment;
     CategoryFragment categoryFragment;
     CartFragment cartFragment;
+    PersonalFragment personalFragment;
     ArrayList<Fragment> mFragmentList;
     ViewPagerAdapter mAdapter;
     ViewPager mViewPagerFragment;
@@ -48,10 +50,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         boutiqueFragment = new BoutiqueFragment();
         categoryFragment = new CategoryFragment();
         cartFragment = new CartFragment();
+        personalFragment = new PersonalFragment();
         mFragmentList.add(newGoodsFragment);
         mFragmentList.add(boutiqueFragment);
         mFragmentList.add(categoryFragment);
         mFragmentList.add(cartFragment);
+        mFragmentList.add(personalFragment);
         // 开始默认进入新品界面
         mRbNewGoods.setChecked(true);
         mAdapter = new ViewPagerAdapter(manager);
@@ -120,6 +124,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.rbPersonal:
                 index = 4;
                 setCheck();
+                mViewPagerFragment.setCurrentItem(index);
                 break;
         }
     }

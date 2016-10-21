@@ -33,13 +33,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <RadioButton
                 android:id="@+id/iv_goodsDetail_cart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
-                android:src="@drawable/selector_cart_bg" />
+                android:drawableRight="@drawable/selector_cart_bg"
+                android:button="@null"
+                />
 
             <TextView
                 android:id="@+id/tv_goodDetail_cart_hint"
@@ -117,6 +119,6 @@
         android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="你这死变态"
+        android:text="求女友"
         android:textColor="@color/black" />
 </LinearLayout>
