@@ -15,6 +15,7 @@ import java.net.URLEncoder;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.bean.UserAvatar;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -26,22 +27,31 @@ import okhttp3.Response;
  */
 public class ImageLoader {
     private static final String UTF_8 = "utf-8";
-    private static final int DOWNLOAD_SUCCESS=0;
-    private static final int DOWNLOAD_ERROR=1;
+    private static final int DOWNLOAD_SUCCESS = 0;
+    private static final int DOWNLOAD_ERROR = 1;
 
     private static OkHttpClient mOkHttpClient;
-    /** mHandler不能单例，否则一个mHandler不能准确地处理多个mBean*/
+    /**
+     * mHandler不能单例，否则一个mHandler不能准确地处理多个mBean
+     */
     private Handler mHandler;
-    private static LruCache<String,Bitmap> mCaches;
+    private static LruCache<String, Bitmap> mCaches;
     ImageBean mBean;
 
-    /** RecyclerView、listView、GridView等容器*/
+    /**
+     * RecyclerView、listView、GridView等容器
+     */
     ViewGroup mParentLayout;
     private static String mTag;
-    /** *缺省图片*/
+    /**
+     * 缺省图片
+     */
     private int mDefaultPicId;
-    /**ListView、RecyclerView是否在拖拽中，true：拖拽中*/
+    /**
+     * ListView、RecyclerView是否在拖拽中，true：拖拽中
+     */
     boolean mIsDragging;
+
     public interface OnImageLoadListener {
         void onSuccess(String url, Bitmap bitmap);
 
@@ -61,6 +71,7 @@ public class ImageLoader {
 
     /**
      * 创建ImageLoader对象
+     *
      * @param baseUrl:服务端根地址
      * @return
      */
@@ -69,14 +80,14 @@ public class ImageLoader {
     }
 
     private ImageLoader(String baseUrl) {
-        mBean=new ImageBean();
-        mBean.url=baseUrl;
-        mIsDragging=true;
+        mBean = new ImageBean();
+        mBean.url = baseUrl;
+        mIsDragging = true;
         initHandler();
         if (mOkHttpClient == null) {
             synchronized (ImageLoader.class) {
                 if (mOkHttpClient == null) {
-                    mOkHttpClient=new OkHttpClient();
+                    mOkHttpClient = new OkHttpClient();
                 }
             }
         }
@@ -87,21 +98,21 @@ public class ImageLoader {
 
     private void initCaches() {
         long maxMemory = Runtime.getRuntime().maxMemory();
-        mCaches = new LruCache<String, Bitmap>((int) maxMemory/4){
+        mCaches = new LruCache<String, Bitmap>((int) maxMemory / 4) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
-                return value.getRowBytes()*value.getHeight();
+                return value.getRowBytes() * value.getHeight();
             }
         };
 
     }
 
     private void initHandler() {
-        mHandler = new Handler(){
+        mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 try {
-                    ImageBean bean= (ImageBean) msg.obj;
+                    ImageBean bean = (ImageBean) msg.obj;
                     switch (msg.what) {
                         case DOWNLOAD_ERROR:
                             if (bean.listener != null) {
@@ -111,12 +122,12 @@ public class ImageLoader {
                             }
                             break;
                         case DOWNLOAD_SUCCESS:
-                            if(bean.listener!=null)
-                                bean.listener.onSuccess(mBean.url,mBean.bitmap);
+                            if (bean.listener != null)
+                                bean.listener.onSuccess(mBean.url, mBean.bitmap);
                             break;
                     }
-                }catch (Exception e){
-                    L.e("exception","e="+e.getMessage());
+                } catch (Exception e) {
+                    L.e("exception", "e=" + e.getMessage());
                 }
             }
         };
@@ -124,48 +135,52 @@ public class ImageLoader {
 
     /**
      * 获取服务端根地址并返回ImageLoader对象
+     *
      * @param url
      * @return
      */
     public ImageLoader url(String url) {
         build(null);
 //        mBean.url=url;
-        mBean.url+=url;
+        mBean.url += url;
         return this;
     }
 
     /**
      * 设置图片的预期宽度并返回ImageLoader对象
+     *
      * @param width
      * @return
      */
     public ImageLoader width(int width) {
-        mBean.width=width;
+        mBean.width = width;
         return this;
     }
 
     /**
      * 设置图片的预期高度并返回ImageLoader对象
+     *
      * @param height
      * @return
      */
     public ImageLoader height(int height) {
-        mBean.height=height;
+        mBean.height = height;
         return this;
     }
 
     /**
      * 设置图片保存至sd卡的文件名
+     *
      * @param saveFileName
      * @return
      */
     public ImageLoader saveFileName(String saveFileName) {
-        mBean.saveFileName=saveFileName;
+        mBean.saveFileName = saveFileName;
         return this;
     }
 
     public ImageLoader listener(OnImageLoadListener listener) {
-        mBean.listener=listener;
+        mBean.listener = listener;
         return this;
     }
 
@@ -185,9 +200,9 @@ public class ImageLoader {
     public Bitmap loadImage(final Context context) {
         if (mBean.url == null) {
             Message msg = Message.obtain();
-            msg.what=DOWNLOAD_ERROR;
+            msg.what = DOWNLOAD_ERROR;
             mBean.error = "url没有设置";
-            msg.obj=mBean;
+            msg.obj = mBean;
             mHandler.sendMessage(msg);
             return null;
         }
@@ -203,16 +218,16 @@ public class ImageLoader {
             return null;
         }
         //用图片的下载地址（不包含每个图片的文件名)设置用于取消请求的tag
-        mTag=mBean.url;
+        mTag = mBean.url;
         Request request = new Request.Builder().url(mBean.url).tag(mTag).build();
         Call call = mOkHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Message msg = Message.obtain();
-                msg.what=DOWNLOAD_ERROR;
+                msg.what = DOWNLOAD_ERROR;
                 mBean.error = e.getMessage();
-                msg.obj=mBean;
+                msg.obj = mBean;
                 mHandler.sendMessage(msg);
             }
 
@@ -227,13 +242,13 @@ public class ImageLoader {
                     }
 
                     Message msg = Message.obtain();
-                    msg.what=DOWNLOAD_SUCCESS;
-                    msg.obj=mBean;
+                    msg.what = DOWNLOAD_SUCCESS;
+                    msg.obj = mBean;
                     mHandler.sendMessage(msg);
-                }else {// 发送下载失败的消息
+                } else {// 发送下载失败的消息
                     Message message = Message.obtain();
                     message.what = DOWNLOAD_ERROR;
-                    mBean.error="图片下载失败";
+                    mBean.error = "图片下载失败";
                     message.obj = mBean;
                     mHandler.sendMessage(message);
                 }
@@ -244,6 +259,7 @@ public class ImageLoader {
 
     /**
      * 则设置图片下载后主线程默认的图片显示代码->mOnImageLoadListener
+     *
      * @param parent:View，例如:RecyclerView、ListView等
      * @return
      */
@@ -265,8 +281,8 @@ public class ImageLoader {
                         mBean.error = "图片加载失败";
                     }
                     Message msg = Message.obtain();
-                    msg.obj=error;
-                    msg.arg1=DOWNLOAD_ERROR;
+                    msg.obj = error;
+                    msg.arg1 = DOWNLOAD_ERROR;
                     mHandler.sendMessage(msg);
                 }
 
@@ -277,29 +293,31 @@ public class ImageLoader {
     }
 
     /**
-     *  设置显示图片的ImageView
+     * 设置显示图片的ImageView
+     *
      * @param imageView
      * @return
      */
     public ImageLoader imageView(ImageView imageView) {
         imageView.setTag(mBean.url);
-        mBean.imageView=imageView;
-        this.mParentLayout= (ViewGroup) imageView.getParent();
+        mBean.imageView = imageView;
+        this.mParentLayout = (ViewGroup) imageView.getParent();
         if (mBean != null) {
             ViewGroup.LayoutParams params = imageView.getLayoutParams();
-            mBean.width=params.width;
-            mBean.height=params.height;
+            mBean.width = params.width;
+            mBean.height = params.height;
         }
         return this;
     }
 
     /**
      * 设置缺省显示的图片
+     *
      * @param defaultPicId
      * @return
      */
     public ImageLoader defaultPicture(int defaultPicId) {
-        mDefaultPicId=defaultPicId;
+        mDefaultPicId = defaultPicId;
         return this;
     }
 
@@ -307,17 +325,19 @@ public class ImageLoader {
      * 设置在拖拽中是否显示图片，默认：true(一直显示图片)
      * true：不拖拽(显示图片)
      * false：拖拽中(不显示图片)
+     *
      * @param isDragging
      * @return
      */
     public ImageLoader setDragging(boolean isDragging) {
-        mIsDragging=isDragging;
+        mIsDragging = isDragging;
         return this;
     }
 
     /**
      * 封装了图片下载和显示的缺省代码。
      * 若要编写更为灵活的显示图片的代码，可调用loadImage方法
+     *
      * @param context
      */
     public void showImage(Context context) {
@@ -338,24 +358,41 @@ public class ImageLoader {
      */
     public static void release() {
         if (mOkHttpClient != null) {
-            mOkHttpClient=null;
-            mCaches=null;
+            mOkHttpClient = null;
+            mCaches = null;
         }
     }
 
-    public static void downloadImg(Context context,ImageView imageView,String thumb){
-        setImage(I.DOWNLOAD_IMG_URL+thumb,context,imageView,true);
+    public static void downloadImg(Context context, ImageView imageView, String thumb) {
+        setImage(I.DOWNLOAD_IMG_URL + thumb, context, imageView, true);
     }
 
-    public static void downloadImg(Context context,ImageView imageView,String thumb,boolean isDragging){
-        setImage(I.DOWNLOAD_IMG_URL+thumb,context,imageView,isDragging);
+    public static void downloadImg(Context context, ImageView imageView, String thumb, boolean isDragging) {
+        setImage(I.DOWNLOAD_IMG_URL + thumb, context, imageView, isDragging);
     }
 
-    public static void setImage(String url,Context context,ImageView imageView,boolean isDragging){
+    public static void setImage(String url, Context context, ImageView imageView, boolean isDragging) {
         ImageLoader.build(url)
                 .defaultPicture(R.drawable.nopic)
                 .imageView(imageView)
                 .setDragging(isDragging)
+                .showImage(context);
+    }
+
+    public static String getUrl(UserAvatar userAvatar) {
+        if (userAvatar != null) {
+            String url = I.SERVER_ROOT + I.REQUEST_DOWNLOAD_AVATAR + "?" + I.NAME_OR_HXID + "=" + userAvatar.getMuserName()
+                    + I.AND + I.AVATAR_TYPE + "=" + userAvatar.getMavatarType() + I.AND + I.Avatar.AVATAR_SUFFIX + userAvatar.getMavatarSuffix()
+                    + I.AND + "width=200&height=200";
+            return url;
+        }
+        return null;
+    }
+
+    public static void setAvatar(String url, Context context, ImageView imageView) {
+        ImageLoader.build(url)
+                .defaultPicture(R.mipmap.user_avatar)
+                .imageView(imageView)
                 .showImage(context);
     }
 }
