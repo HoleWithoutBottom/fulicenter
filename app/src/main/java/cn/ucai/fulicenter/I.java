@@ -27,7 +27,8 @@ public interface I {
      */
     int TYPE_ITEM = 0;
     int TYPE_FOOTER = 1;
-    int REQUEST_CODE = 101;
+    int REQUEST_CODE_REGISTER = 101;
+    int REQUEST_CODE_SUCCESS_LOGIN = 102;
     /**
      * BeeColud APP ID
      */
@@ -307,6 +308,7 @@ public interface I {
     }
 
     interface Avatar {
+        String AVATAR_SUFFIX = "m_avatar_suffix";
         String TABLE_NAME = "t_superwechat_avatar";
         String AVATAR_ID = "m_avatar_id";//主键
         String USER_ID = "m_avatar_user_id";//用户id或者群组id

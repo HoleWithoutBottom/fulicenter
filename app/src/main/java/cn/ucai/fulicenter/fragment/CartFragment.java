@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public class CartFragment extends Fragment {
         return view;
     }
 
+
+
     private void initData() {
         goodsList = new ArrayList<>();
         goodsList = FuLiCenterApplication.detailBeenList;
@@ -88,7 +91,7 @@ public class CartFragment extends Fragment {
         CheckBox checkBox;
         ImageView ivCart, ivAdd, ivDec;
         TextView tvGoodsName, tvGoodsCount, tvGoodsPrice;
-
+        LinearLayout linearLayoutCart;
         public CartViewHolder(View itemView) {
             super(itemView);
             checkBox = (CheckBox) itemView.findViewById(R.id.chk_cart);
@@ -98,6 +101,7 @@ public class CartFragment extends Fragment {
             tvGoodsName = (TextView) itemView.findViewById(R.id.tv_cart_goodsName);
             tvGoodsCount = (TextView) itemView.findViewById(R.id.tv_cart_count);
             tvGoodsPrice = (TextView) itemView.findViewById(R.id.tv_cart_price);
+            linearLayoutCart= (LinearLayout) itemView.findViewById(R.id.linearLayout_cart);
             // 增加商品数量
             ivAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -144,13 +148,19 @@ public class CartFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(CartViewHolder holder, int position) {
+        public void onBindViewHolder(CartViewHolder holder, final int position) {
             GoodsDetailBean detailBean = mList.get(position);
             holder.tvGoodsPrice.setText(detailBean.getCurrencyPrice());
             holder.tvGoodsName.setText(detailBean.getGoodsName());
             holder.tvGoodsCount.setText("(" + 1 + ")");
             ImageLoader.downloadImg(context, holder.ivCart, detailBean.getGoodsThumb());
-            this.position = position;
+            holder.linearLayoutCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mAdapter.position = position;
+                }
+            });
+
         }
 
         @Override

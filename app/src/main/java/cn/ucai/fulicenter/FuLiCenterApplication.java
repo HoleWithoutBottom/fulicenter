@@ -30,4 +30,8 @@ public class FuLiCenterApplication extends Application {
         }
         return instance;
     }
+
+    public static void setUserAvatar(UserAvatar userAvatar) {
+        FuLiCenterApplication.userAvatar = userAvatar;
+    }
 }

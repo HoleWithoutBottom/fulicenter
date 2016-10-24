@@ -1,34 +1,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/personal_center_top_bg"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_personal_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="设置"
-            android:textColor="#fff"
-            android:textSize="20sp" />
+        android:background="@color/personal_center_top_bg">
 
         <ImageView
             android:id="@+id/iv_personal_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
-            android:src="@mipmap/message" />
+            android:layout_margin="5dp"
+            android:src="@mipmap/tb_icon_more_msg_white_56" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_personal_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@id/iv_personal_message"
+            android:gravity="right"
+            android:text="设置"
+            android:textColor="#fff"
+            android:textSize="24sp" />
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@mipmap/qr_code_avatar" />
+            android:src="@mipmap/tb_icon_home_qrcode_gray" />
     </LinearLayout>
 
     <LinearLayout
@@ -153,6 +153,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -173,70 +174,62 @@
             android:drawableRight="@mipmap/right"
             android:text="查看全部已购买的宝贝" />
     </LinearLayout>
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/divide_line_bg"/>
-    <RadioGroup
+        android:src="@drawable/divide_line_bg" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
-        <RadioButton
-            android:id="@+id/rb_personal_toPay"
+        <ImageView
+            android:id="@+id/iv_personal_toPay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/icon_account"
             android:gravity="center_horizontal"
-            android:text="待付款" />
+            android:src="@mipmap/order_list1" />
 
-        <RadioButton
-            android:id="@+id/rb_personal_toSend"
+        <ImageView
+            android:id="@+id/iv_personal_toSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/icon_account"
             android:gravity="center_horizontal"
-            android:text="待发货" />
+            android:src="@mipmap/order_list2" />
 
-        <RadioButton
-            android:id="@+id/rb_personal_toReceive"
+        <ImageView
+            android:id="@+id/iv_personal_toReceive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/icon_account"
             android:gravity="center_horizontal"
-            android:text="待收货" />
+            android:src="@mipmap/order_list3" />
 
-        <RadioButton
-            android:id="@+id/rb_personal_toEvaluate"
+        <ImageView
+            android:id="@+id/iv_personal_toEvaluate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/icon_account"
-            android:gravity="center_horizontal"
-            android:text="待付款" />
+            android:src="@mipmap/order_list4" />
 
-        <RadioButton
-            android:id="@+id/rb_personal_refundAndAfterSales"
+        <ImageView
+            android:id="@+id/iv_personal_refundAndAfterSales"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/icon_account"
             android:gravity="center_horizontal"
-            android:text="退款/售后" />
-    </RadioGroup>
+            android:src="@mipmap/order_list5" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -252,96 +245,110 @@
         android:text="我的卡券包"
         android:textColor="#000"
         android:textSize="20sp" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/divide_line_bg"/>
+        android:src="@drawable/divide_line_bg" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_account"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:src="@mipmap/center_card_coupon1" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:drawableRight="@mipmap/right"
             android:text="生活券"
             android:textColor="#000"
-            android:drawableRight="@mipmap/right"
-            android:layout_margin="10dp"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"/>
+            android:textSize="20sp" />
     </LinearLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/divide_line_bg"/>
+        android:src="@drawable/divide_line_bg" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_account"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:src="@mipmap/center_card_coupon2" />
+
         <TextView
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
             android:text="网店券"
             android:textColor="#000"
-            android:layout_margin="10dp"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"/>
+            android:textSize="20sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableRight="@mipmap/right"
-            android:text="暂无可用优惠券"
-            android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
-            android:drawablePadding="5dp"/>
+            android:drawablePadding="5dp"
+            android:drawableRight="@mipmap/right"
+            android:text="暂无可用优惠券"
+            android:textSize="20sp" />
     </LinearLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/divide_line_bg"/>
+        android:src="@drawable/divide_line_bg" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_account"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="会员卡"
-            android:textColor="#000"
             android:layout_margin="10dp"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"/>
+            android:src="@mipmap/center_card_coupon3" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableRight="@mipmap/right"
-            android:text="一卡在手，吃鸡无忧"
-            android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
-            android:drawablePadding="5dp"/>
+            android:layout_weight="1"
+            android:text="会员卡"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:drawablePadding="5dp"
+            android:drawableRight="@mipmap/right"
+            android:text="一卡在手，吃鸡无忧"
+            android:textSize="20sp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/gray"
-        ></LinearLayout>
+        android:background="@color/gray"/>
 </LinearLayout>

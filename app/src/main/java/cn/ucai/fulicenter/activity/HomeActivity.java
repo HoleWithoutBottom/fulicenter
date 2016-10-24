@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.MainActivity;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.fragment.BoutiqueFragment;
@@ -21,6 +22,7 @@ import cn.ucai.fulicenter.fragment.CartFragment;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.NewGoodsFragment;
 import cn.ucai.fulicenter.fragment.PersonalFragment;
+import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MFGT;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -82,10 +84,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onPageSelected(int position) {
                 index = position;
                 setCheck();
-                if (index==4){
+                if (index == 4) {
                     if (FuLiCenterApplication.userAvatar == null) {
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                        MFGT.startActivity(HomeActivity.this, intent);
+                        MFGT.startActivityForResult(HomeActivity.this, intent,I.REQUEST_CODE_SUCCESS_LOGIN);
                         return;
                     }
                 }
@@ -135,7 +137,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.rbPersonal:
                 if (FuLiCenterApplication.userAvatar == null) {
                     Intent intent = new Intent(this, MainActivity.class);
-                    MFGT.startActivity(this, intent);
+                    MFGT.startActivityForResult(this, intent, I.REQUEST_CODE_SUCCESS_LOGIN);
                     return;
                 }
                 index = 4;
@@ -170,6 +172,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public int getCount() {
             return mFragmentList.size();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mViewPagerFragment.setCurrentItem(index);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == I.REQUEST_CODE_SUCCESS_LOGIN && FuLiCenterApplication.userAvatar!=null) {
+            index = 4;
         }
     }
 }

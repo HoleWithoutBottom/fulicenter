@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +17,7 @@ import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.UserAvatar;
 import cn.ucai.fulicenter.dao.UserDao;
 import cn.ucai.fulicenter.utils.CommonUtils;
-import cn.ucai.fulicenter.utils.L;
+import cn.ucai.fulicenter.utils.MD5;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-                MFGT.startActivityForResult(MainActivity.this, intent, I.REQUEST_CODE);
+                MFGT.startActivityForResult(MainActivity.this, intent, I.REQUEST_CODE_REGISTER);
             }
         });
         // 登录
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String userName = mEtUserName.getText().toString().trim();
-                String password = mEtPassword.getText().toString().trim();
+                String password = MD5.getMessageDigest(mEtPassword.getText().toString().trim());
                 if (userName == null || userName.length() == 0) {
                     CommonUtils.showShortToast("请输入账号");
                     mEtUserName.requestFocus();
@@ -83,12 +82,13 @@ public class MainActivity extends AppCompatActivity {
                                             if (dao.saveUser(userAvatar)) {
                                                 SharedPreferences sp = getSharedPreferences("UserInfo", MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sp.edit();
-                                                editor.putString("userName",userAvatar.getMuserName());
+                                                editor.putString("userName", userAvatar.getMuserName());
                                                 editor.commit();
                                                 FuLiCenterApplication.setUserAvatar(userAvatar);
                                             }
-                                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                                            MFGT.startActivity(MainActivity.this, intent);
+                                            /*Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                            MFGT.startActivity(MainActivity.this, intent);*/
+                                            MFGT.finish(MainActivity.this);
                                             break;
                                         default:
                                             CommonUtils.showShortToast("登录失败");
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == I.REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == I.REQUEST_CODE_REGISTER && resultCode == RESULT_OK) {
             mEtUserName.setText(data.getStringExtra("userName"));
         }
     }

@@ -4,68 +4,68 @@ package cn.ucai.fulicenter.bean;
  * Created by Administrator on 2016/10/13.
  */
 public class UserAvatar {
-    private String musername;
-    private String musernick;
-    private int mavatarid;
-    private String mavatarpath;
-    private String mavatarsuffix;
-    private int mavatartype;
-    private String mavatarlastupdatetime;
+    private String muserName;
+    private String muserNick;
+    private int mavatarId;
+    private String mavatarPath;
+    private String mavatarSuffix;
+    private int mavatarType;
+    private String mavatarLastUpdateTime;
 
-    public void setMusername(String musername) {
-        this.musername = musername;
+    public void setMuserName(String muserName) {
+        this.muserName = muserName;
     }
 
-    public String getMusername() {
-        return musername;
+    public String getMuserName() {
+        return muserName;
     }
 
-    public void setMusernick(String musernick) {
-        this.musernick = musernick;
+    public void setMuserNick(String muserNick) {
+        this.muserNick = muserNick;
     }
 
-    public String getMusernick() {
-        return musernick;
+    public String getMuserNick() {
+        return muserNick;
     }
 
-    public void setMavatarid(int mavatarid) {
-        this.mavatarid = mavatarid;
+    public void setMavatarId(int mavatarId) {
+        this.mavatarId = mavatarId;
     }
 
-    public int getMavatarid() {
-        return mavatarid;
+    public int getMavatarId() {
+        return mavatarId;
     }
 
-    public void setMavatarpath(String mavatarpath) {
-        this.mavatarpath = mavatarpath;
+    public void setMavatarPath(String mavatarPath) {
+        this.mavatarPath = mavatarPath;
     }
 
-    public String getMavatarpath() {
-        return mavatarpath;
+    public String getMavatarPath() {
+        return mavatarPath;
     }
 
-    public void setMavatarsuffix(String mavatarsuffix) {
-        this.mavatarsuffix = mavatarsuffix;
+    public void setMavatarSuffix(String mavatarSuffix) {
+        this.mavatarSuffix = mavatarSuffix;
     }
 
-    public String getMavatarsuffix() {
-        return mavatarsuffix;
+    public String getMavatarSuffix() {
+        return mavatarSuffix;
     }
 
-    public void setMavatartype(int mavatartype) {
-        this.mavatartype = mavatartype;
+    public void setMavatarType(int mavatarType) {
+        this.mavatarType = mavatarType;
     }
 
-    public int getMavatartype() {
-        return mavatartype;
+    public int getMavatarType() {
+        return mavatarType;
     }
 
-    public void setMavatarlastupdatetime(String mavatarlastupdatetime) {
-        this.mavatarlastupdatetime = mavatarlastupdatetime;
+    public void setMavatarLastUpdateTime(String mavatarLastUpdateTime) {
+        this.mavatarLastUpdateTime = mavatarLastUpdateTime;
     }
 
-    public String getMavatarlastupdatetime() {
-        return mavatarlastupdatetime;
+    public String getMavatarLastUpdateTime() {
+        return mavatarLastUpdateTime;
     }
 
     public UserAvatar() {
@@ -74,13 +74,13 @@ public class UserAvatar {
     @Override
     public String toString() {
         return "UserAvatar{" +
-                "musername='" + musername + '\'' +
-                ", musernick='" + musernick + '\'' +
-                ", mavatarid=" + mavatarid +
-                ", mavatarpath='" + mavatarpath + '\'' +
-                ", mavatarsuffix='" + mavatarsuffix + '\'' +
-                ", mavatartype=" + mavatartype +
-                ", mavatarlastupdatetime='" + mavatarlastupdatetime + '\'' +
+                "muserName='" + muserName + '\'' +
+                ", muserNick='" + muserNick + '\'' +
+                ", mavatarId=" + mavatarId +
+                ", mavatarPath='" + mavatarPath + '\'' +
+                ", mavatarSuffix='" + mavatarSuffix + '\'' +
+                ", mavatarType=" + mavatarType +
+                ", mavatarLastUpdateTime='" + mavatarLastUpdateTime + '\'' +
                 '}';
     }
 }

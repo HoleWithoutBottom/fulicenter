@@ -18,6 +18,7 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.L;
+import cn.ucai.fulicenter.utils.MD5;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
@@ -55,8 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
             case R.id.btn_register:
                 final String userName = etUserNameRegister.getText().toString().trim();
                 String nickName = etNickNameRegister.getText().toString().trim();
-                String password = etPasswordRegister.getText().toString().trim();
-                String confirmPassword = etConfirmPasswordRegister.getText().toString().trim();
+                String password = MD5.getMessageDigest(etPasswordRegister.getText().toString().trim());
+                String confirmPassword = MD5.getMessageDigest(etConfirmPasswordRegister.getText().toString().trim());
                 if (userName == null || userName.length() == 0) {
                     CommonUtils.showShortToast("请输入账号");
                     etUserNameRegister.requestFocus();
@@ -100,11 +101,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (result != null) {
                                     if (result.getRetCode() == 0) {
                                         CommonUtils.showShortToast("注册成功!");
-                                        setResult(RESULT_OK,new Intent().putExtra("userName",userName));
+                                        setResult(RESULT_OK, new Intent().putExtra("userName", userName));
                                         MFGT.finish(RegisterActivity.this);
-                                    }else if (result.getRetCode()==102){
+                                    } else if (result.getRetCode() == 102) {
                                         CommonUtils.showShortToast("该账号已存在！");
-                                    }else {
+                                    } else {
                                         CommonUtils.showShortToast("注册失败！");
                                     }
                                 }
