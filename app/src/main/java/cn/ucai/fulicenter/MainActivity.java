@@ -1,6 +1,7 @@
 package cn.ucai.fulicenter;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import cn.ucai.fulicenter.activity.HomeActivity;
 import cn.ucai.fulicenter.activity.RegisterActivity;
 import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.UserAvatar;
+import cn.ucai.fulicenter.dao.UserDao;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MFGT;
@@ -77,7 +79,14 @@ public class MainActivity extends AppCompatActivity {
                                             String json = result.getRetData().toString();
                                             Gson gson = new Gson();
                                             UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
-                                            FuLiCenterApplication.userAvatar = userAvatar;
+                                            UserDao dao = new UserDao(MainActivity.this);
+                                            if (dao.saveUser(userAvatar)) {
+                                                SharedPreferences sp = getSharedPreferences("UserInfo", MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sp.edit();
+                                                editor.putString("userName",userAvatar.getMuserName());
+                                                editor.commit();
+                                                FuLiCenterApplication.setUserAvatar(userAvatar);
+                                            }
                                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                                             MFGT.startActivity(MainActivity.this, intent);
                                             break;
