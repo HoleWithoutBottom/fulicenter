@@ -6,33 +6,33 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.util.Set;
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
-import cn.ucai.fulicenter.MainActivity;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.UserAvatar;
 import cn.ucai.fulicenter.dao.UserDao;
 import cn.ucai.fulicenter.utils.CommonUtils;
-import cn.ucai.fulicenter.utils.ConvertUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
+import cn.ucai.fulicenter.utils.OnSetAvatarListener;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -48,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.btn_settings_exitLogin)
     Button btnSettingsExitLogin;
     UserAvatar userAvatar;
+    OnSetAvatarListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,10 @@ public class SettingsActivity extends AppCompatActivity {
                 MFGT.finish(this);
                 break;
             case R.id.iv_settings_avatar:
+                // 父容器是整个activity
+                listener = new OnSetAvatarListener(SettingsActivity.this, R.id.line_settings,
+                        userAvatar.getMuserName(), I.AVATAR_TYPE_USER_PATH);
+
                 break;
             case R.id.tv_settings_update_username:
                 CommonUtils.showShortToast("用户名不能更改");
@@ -154,5 +159,51 @@ public class SettingsActivity extends AppCompatActivity {
 
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        listener.setAvatar(requestCode, data, ivSettingsAvatar);
+        if (requestCode == OnSetAvatarListener.REQUEST_CROP_PHOTO) {
+            updateAvatar();
+        }
+    }
+
+    public void updateAvatar() {
+        File dir = OnSetAvatarListener.getAvatarFile(SettingsActivity.this, I.AVATAR_TYPE_USER_PATH);
+        File file = new File(dir, userAvatar.getMuserName() + ".jpg");
+        OkHttpUtils<Result> utils = new OkHttpUtils<>(SettingsActivity.this);
+        utils.setRequestUrl(I.REQUEST_UPDATE_AVATAR)
+                .addParam(I.NAME_OR_HXID, userAvatar.getMuserName())
+                .addParam(I.AVATAR_TYPE, I.AVATAR_TYPE_USER_PATH)
+                .targetClass(Result.class)
+                .addFile2(file)
+                .post()
+                .execute(new OkHttpUtils.OnCompleteListener<Result>() {
+                    @Override
+                    public void onSuccess(Result result) {
+                        if (result != null) {
+                            if (result.getRetCode() == 0) {
+                                String json = result.getRetData().toString();
+                                Gson gson = new Gson();
+                                UserAvatar user = gson.fromJson(json, UserAvatar.class);
+                                FuLiCenterApplication.setUserAvatar(user);
+                                userAvatar = user;
+                                // 清除之前的头像缓存
+                                ImageLoader.release();
+                                ImageLoader.setAvatar(ImageLoader.getUrl(user), SettingsActivity.this, ivSettingsAvatar);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        L.e(error);
+                    }
+                });
     }
 }
