@@ -58,6 +58,21 @@ public class DBManager {
         return false;
     }
 
+    public synchronized boolean updateUserAvatar(UserAvatar userAvatar) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(UserDao.USER_COLUMN_NAME, userAvatar.getMuserName());
+        values.put(UserDao.USER_COLUMN_NICK, userAvatar.getMuserNick());
+        values.put(UserDao.USER_COLUMN_AVATAR_ID, userAvatar.getMavatarId());
+        values.put(UserDao.USER_COLUMN_AVATAR_TYPE, userAvatar.getMavatarType());
+        values.put(UserDao.USER_COLUMN_AVATAR_PATH, userAvatar.getMavatarPath());
+        values.put(UserDao.USER_COLUMN_AVATAR_SUFFIX, userAvatar.getMavatarSuffix());
+        values.put(UserDao.USER_COLUMN_AVATAR_LASTUPDATE_TIME, userAvatar.getMavatarLastUpdateTime());
+        if (db.isOpen()) {
+            return db.update(UserDao.USER_TABLE_NAME, values, UserDao.USER_COLUMN_NAME + "=?", new String[]{userAvatar.getMuserName()}) != -1;
+        }
+        return false;
+    }
 
     public synchronized void closeDB() {
         if (dbHelper != null) {

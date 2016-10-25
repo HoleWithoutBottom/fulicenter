@@ -1,34 +1,53 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.I;
+import cn.ucai.fulicenter.MainActivity;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.UserAvatar;
+import cn.ucai.fulicenter.dao.UserDao;
+import cn.ucai.fulicenter.utils.CommonUtils;
+import cn.ucai.fulicenter.utils.ConvertUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.MFGT;
+import cn.ucai.fulicenter.utils.OkHttpUtils;
 
 public class SettingsActivity extends AppCompatActivity {
+
 
     @Bind(R.id.iv_settings_back)
     ImageView ivSettingsBack;
     @Bind(R.id.iv_settings_avatar)
     ImageView ivSettingsAvatar;
-    @Bind(R.id.btn_settings_exitLogin)
-    Button btnSettingsExitLogin;
+    @Bind(R.id.tv_settings_update_username)
+    TextView tvSettingsUpdateUsername;
     @Bind(R.id.tv_settings_nick)
     TextView tvSettingsNick;
-    @Bind(R.id.tv_settings_update_nick)
-    TextView tvSettingsUpdateNick;
+    @Bind(R.id.btn_settings_exitLogin)
+    Button btnSettingsExitLogin;
+    UserAvatar userAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +58,18 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        UserAvatar userAvatar = FuLiCenterApplication.userAvatar;
+        userAvatar = FuLiCenterApplication.userAvatar;
         if (userAvatar != null) {
             tvSettingsNick.setText(userAvatar.getMuserNick());
-            tvSettingsUpdateNick.setText(userAvatar.getMuserNick());
+            tvSettingsUpdateUsername.setText(userAvatar.getMuserName());
             ImageLoader.setAvatar(ImageLoader.getUrl(userAvatar), SettingsActivity.this, ivSettingsAvatar);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 
     @OnClick(R.id.btn_settings_exitLogin)
@@ -54,8 +79,80 @@ public class SettingsActivity extends AppCompatActivity {
         editor.clear();
         editor.commit();
         FuLiCenterApplication.userAvatar = null;
-        Intent intent=new Intent(this,HomeActivity.class);
-        MFGT.startActivity(this,intent);
         MFGT.finish(this);
+    }
+
+    @OnClick({R.id.iv_settings_back, R.id.iv_settings_avatar, R.id.tv_settings_update_username, R.id.tv_settings_nick})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_settings_back:
+                MFGT.finish(this);
+                break;
+            case R.id.iv_settings_avatar:
+                break;
+            case R.id.tv_settings_update_username:
+                CommonUtils.showShortToast("用户名不能更改");
+                break;
+            case R.id.tv_settings_nick:
+                View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_item, null, false);
+                final EditText etUpdateNick = (EditText) inflate.findViewById(R.id.et_settings_update_nick);
+                etUpdateNick.setText(userAvatar.getMuserNick());
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("是否更改昵称")
+                        .setView(inflate)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String nick = etUpdateNick.getText().toString();
+                                if (nick == null || nick.length() == 0) {
+                                    etUpdateNick.setError("昵称不能为空!");
+                                    etUpdateNick.requestFocus();
+                                    return;
+                                }
+                                if (nick.equals(userAvatar.getMuserNick())) {
+                                    etUpdateNick.setError("昵称没有改变");
+                                    return;
+                                } else {
+                                    // 请求数据库更改昵称
+                                    OkHttpUtils<Result> utils = new OkHttpUtils<Result>(SettingsActivity.this);
+                                    utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
+                                            .addParam(I.User.USER_NAME, userAvatar.getMuserName())
+                                            .addParam(I.User.NICK, nick)
+                                            .targetClass(Result.class)
+                                            .execute(new OkHttpUtils.OnCompleteListener<Result>() {
+                                                @Override
+                                                public void onSuccess(Result result) {
+                                                    if (result != null) {
+                                                        if (result.getRetCode() == 0) {
+                                                            String json = result.getRetData().toString();
+                                                            Gson gson = new Gson();
+                                                            UserAvatar user = gson.fromJson(json, UserAvatar.class);
+                                                            FuLiCenterApplication.setUserAvatar(user);
+                                                            UserDao dao = new UserDao(SettingsActivity.this);
+                                                            if (dao.updateUser(user)) {
+                                                                CommonUtils.showShortToast("更改成功！");
+                                                                tvSettingsNick.setText(user.getMuserNick());
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onError(String error) {
+
+                                                }
+                                            });
+                                }
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).create()
+                        .show();
+
+                break;
+        }
     }
 }
