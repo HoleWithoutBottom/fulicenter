@@ -36,20 +36,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户头像"
+            android:layout_gravity="center_vertical"
+            android:textColor="#000"
+            android:textSize="20sp"/>
         <ImageView
             android:layout_margin="10dp"
             android:id="@+id/iv_settings_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/contactlogo"/>
-        <TextView
-            android:id="@+id/tv_settings_nick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="nick"
-            android:layout_gravity="center_vertical"
-            android:textColor="#000"
-            android:textSize="20sp"/>
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
@@ -63,17 +64,17 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="昵称"
+            android:text="用户名"
             android:layout_margin="10dp"
             android:textColor="#000"
             android:textSize="20sp"
             android:layout_gravity="center_vertical"/>
         <TextView
-            android:id="@+id/tv_settings_update_nick"
+            android:id="@+id/tv_settings_update_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableRight="@mipmap/right"
-            android:text="昵称"
+            android:text="用户名"
             android:textColor="@color/blue"
             android:layout_margin="10dp"
             android:drawablePadding="10dp"
@@ -92,13 +93,31 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的二维码"
+            android:text="昵称"
             android:textSize="20sp"
             android:textColor="#000"
             android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/tv_settings_nick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue"
+            android:text="昵称"
+            android:drawableRight="@mipmap/right"
+            android:layout_gravity="center_vertical"
+            android:textSize="20sp"
             android:layout_margin="10dp"
-            android:drawableRight="@mipmap/tb_icon_home_qrcode_gray"/>
+            android:drawablePadding="10dp"/>
     </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/divide_line_bg"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
     <Button
         android:id="@+id/btn_settings_exitLogin"
         android:layout_width="match_parent"
