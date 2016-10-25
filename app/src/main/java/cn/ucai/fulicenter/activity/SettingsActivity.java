@@ -33,6 +33,7 @@ import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 import cn.ucai.fulicenter.utils.OnSetAvatarListener;
+import cn.ucai.fulicenter.utils.ResultUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -119,19 +120,18 @@ public class SettingsActivity extends AppCompatActivity {
                                     return;
                                 } else {
                                     // 请求数据库更改昵称
-                                    OkHttpUtils<Result> utils = new OkHttpUtils<Result>(SettingsActivity.this);
+                                    OkHttpUtils<String> utils = new OkHttpUtils<String>(SettingsActivity.this);
                                     utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
                                             .addParam(I.User.USER_NAME, userAvatar.getMuserName())
                                             .addParam(I.User.NICK, nick)
-                                            .targetClass(Result.class)
-                                            .execute(new OkHttpUtils.OnCompleteListener<Result>() {
+                                            .targetClass(String.class)
+                                            .execute(new OkHttpUtils.OnCompleteListener<String>() {
                                                 @Override
-                                                public void onSuccess(Result result) {
+                                                public void onSuccess(String s) {
+                                                    Result result = ResultUtils.getResultFromJson(s, UserAvatar.class);
                                                     if (result != null) {
                                                         if (result.getRetCode() == 0) {
-                                                            String json = result.getRetData().toString();
-                                                            Gson gson = new Gson();
-                                                            UserAvatar user = gson.fromJson(json, UserAvatar.class);
+                                                            UserAvatar user = (UserAvatar) result.getRetData();
                                                             FuLiCenterApplication.setUserAvatar(user);
                                                             UserDao dao = new UserDao(SettingsActivity.this);
                                                             if (dao.updateUser(user)) {
@@ -176,26 +176,28 @@ public class SettingsActivity extends AppCompatActivity {
     public void updateAvatar() {
         File dir = OnSetAvatarListener.getAvatarFile(SettingsActivity.this, I.AVATAR_TYPE_USER_PATH);
         File file = new File(dir, userAvatar.getMuserName() + ".jpg");
-        OkHttpUtils<Result> utils = new OkHttpUtils<>(SettingsActivity.this);
+        OkHttpUtils<String> utils = new OkHttpUtils<>(SettingsActivity.this);
         utils.setRequestUrl(I.REQUEST_UPDATE_AVATAR)
                 .addParam(I.NAME_OR_HXID, userAvatar.getMuserName())
                 .addParam(I.AVATAR_TYPE, I.AVATAR_TYPE_USER_PATH)
-                .targetClass(Result.class)
+                .targetClass(String.class)
                 .addFile2(file)
                 .post()
-                .execute(new OkHttpUtils.OnCompleteListener<Result>() {
+                .execute(new OkHttpUtils.OnCompleteListener<String>() {
                     @Override
-                    public void onSuccess(Result result) {
+                    public void onSuccess(String s) {
+                        Result result = ResultUtils.getResultFromJson(s, UserAvatar.class);
                         if (result != null) {
                             if (result.getRetCode() == 0) {
-                                String json = result.getRetData().toString();
-                                Gson gson = new Gson();
-                                UserAvatar user = gson.fromJson(json, UserAvatar.class);
+                                UserAvatar user = (UserAvatar) result.getRetData();
                                 FuLiCenterApplication.setUserAvatar(user);
                                 userAvatar = user;
                                 // 清除之前的头像缓存
                                 ImageLoader.release();
                                 ImageLoader.setAvatar(ImageLoader.getUrl(user), SettingsActivity.this, ivSettingsAvatar);
+                                CommonUtils.showShortToast("更新头像成功");
+                            }else {
+                                CommonUtils.showShortToast("更新头像失败");
                             }
                         }
                     }

@@ -17,9 +17,11 @@ import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.UserAvatar;
 import cn.ucai.fulicenter.dao.UserDao;
 import cn.ucai.fulicenter.utils.CommonUtils;
+import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MD5;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
+import cn.ucai.fulicenter.utils.ResultUtils;
 
 public class MainActivity extends AppCompatActivity {
     EditText mEtUserName, mEtPassword;
@@ -63,21 +65,20 @@ public class MainActivity extends AppCompatActivity {
                     mEtPassword.requestFocus();
                     return;
                 }
-                OkHttpUtils<Result> utils = new OkHttpUtils<Result>(MainActivity.this);
+                OkHttpUtils<String> utils = new OkHttpUtils<String>(MainActivity.this);
                 utils.setRequestUrl(I.REQUEST_LOGIN)
                         .addParam(I.User.USER_NAME, userName)
                         .addParam(I.User.PASSWORD, password)
-                        .targetClass(Result.class)
-                        .execute(new OkHttpUtils.OnCompleteListener<Result>() {
+                        .targetClass(String.class)
+                        .execute(new OkHttpUtils.OnCompleteListener<String>() {
                             @Override
-                            public void onSuccess(Result result) {
+                            public void onSuccess(String s) {
+                                Result result = ResultUtils.getResultFromJson(s, UserAvatar.class);
                                 if (result != null) {
                                     switch (result.getRetCode()) {
                                         case 0:
                                             CommonUtils.showShortToast("登录成功！");
-                                            String json = result.getRetData().toString();
-                                            Gson gson = new Gson();
-                                            UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
+                                            UserAvatar userAvatar = (UserAvatar) result.getRetData();
                                             UserDao dao = new UserDao(MainActivity.this);
                                             if (dao.saveUser(userAvatar)) {
                                                 SharedPreferences sp = getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -112,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                MFGT.startActivity(MainActivity.this, intent);
             }
         });
     }
@@ -133,4 +135,5 @@ public class MainActivity extends AppCompatActivity {
             mEtUserName.setText(data.getStringExtra("userName"));
         }
     }
+
 }
