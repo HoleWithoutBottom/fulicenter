@@ -1,7 +1,7 @@
 package cn.ucai.fulicenter.activity;
 
-import android.content.Intent;
-import android.os.AsyncTask;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,10 +26,12 @@ import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.AlbumsBean;
+import cn.ucai.fulicenter.bean.CollectBean;
 import cn.ucai.fulicenter.bean.GoodsDetailBean;
+import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.bean.PropertiesBean;
 import cn.ucai.fulicenter.utils.CommonUtils;
-import cn.ucai.fulicenter.utils.ImageLoader;
+
 import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 import cn.ucai.fulicenter.views.FlowIndicator;
@@ -64,6 +66,7 @@ public class GoodsDetailActivity extends AppCompatActivity {
     PictureAdapter myAdapter;
     int mCount = 0;
     GoodsDetailBean goodsDetailBean;
+    Boolean isChecked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,36 @@ public class GoodsDetailActivity extends AppCompatActivity {
         int id = getIntent().getIntExtra("goodsId", 0);
         downloadGoodsDetail(id);
         imageViews = new ArrayList<>();
+        if (goodsDetailBean != null && FuLiCenterApplication.userAvatar != null) {
+            syncIsCollect(goodsDetailBean);
+        }
+    }
+
+    private void syncIsCollect(GoodsDetailBean goodsDetailBean) {
+        OkHttpUtils<MessageBean> utils = new OkHttpUtils<>(GoodsDetailActivity.this);
+        utils.setRequestUrl(I.REQUEST_IS_COLLECT)
+                .addParam(I.Goods.KEY_GOODS_ID, goodsDetailBean.getGoodsId() + "")
+                .addParam(I.Collect.USER_NAME, FuLiCenterApplication.userAvatar.getMuserName())
+                .targetClass(MessageBean.class)
+                .execute(new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null) {
+                            if (result.isSuccess()) {
+                                ivGoodsDetailCollect.setImageResource(R.mipmap.bg_collect_out);
+                                isChecked = true;
+                            } else {
+                                ivGoodsDetailCollect.setImageResource(R.mipmap.bg_collect_in);
+                                isChecked = false;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast(error);
+                    }
+                });
     }
 
     // 下载商品详情
@@ -141,6 +174,10 @@ public class GoodsDetailActivity extends AppCompatActivity {
                     public void onSuccess(GoodsDetailBean result) {
                         if (result != null) {
                             goodsDetailBean = result;
+                            L.e(result.toString());
+                            if (goodsDetailBean != null && FuLiCenterApplication.userAvatar != null) {
+                                syncIsCollect(goodsDetailBean);
+                            }
                             tvGoodsDetailEnglisheName.setText(result.getGoodsEnglishName());
                             tvGoodsDetailName.setText(result.getGoodsName());
                             tvGoodsDetailPrice.setText(result.getRankPrice());
@@ -187,12 +224,72 @@ public class GoodsDetailActivity extends AppCompatActivity {
                 // L.e("sb"+FuLiCenterApplication.goodsDetailBean.toString());
                 break;
             case R.id.iv_goodsDetail_collect:
+                if (isChecked) {
+                    deleteCollect(goodsDetailBean.getGoodsId(), GoodsDetailActivity.this);
+                    syncIsCollect(goodsDetailBean);
+                }else {
+                    if (FuLiCenterApplication.userAvatar != null) {
+                        addCollect(goodsDetailBean);
+                    }
+                }
                 break;
             case R.id.iv_goodsDetail_share:
                 break;
         }
     }
 
+    // 添加收藏
+    private void addCollect(final GoodsDetailBean goodsDetailBean) {
+        OkHttpUtils<MessageBean> utils = new OkHttpUtils<>(GoodsDetailActivity.this);
+        utils.setRequestUrl(I.REQUEST_ADD_COLLECT)
+                .addParam(I.Collect.GOODS_ID, goodsDetailBean.getGoodsId() + "")
+                .addParam(I.Collect.USER_NAME, FuLiCenterApplication.userAvatar.getMuserName())
+                .targetClass(MessageBean.class)
+                .execute(new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null && result.isSuccess()) {
+                            CommonUtils.showShortToast(result.getMsg());
+                            syncIsCollect(goodsDetailBean);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
+    }
+
+    // 删除收藏
+    public void deleteCollect(int goodsId, Context context) {
+        OkHttpUtils<MessageBean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DELETE_COLLECT)
+                .addParam(I.Collect.GOODS_ID, goodsId + "")
+                .addParam(I.Collect.USER_NAME, FuLiCenterApplication.userAvatar.getMuserName())
+                .targetClass(MessageBean.class)
+                .execute(new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null) {
+                            CommonUtils.showShortToast(result.getMsg());
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast(error);
+                    }
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (goodsDetailBean != null && FuLiCenterApplication.userAvatar != null) {
+            syncIsCollect(goodsDetailBean);
+        }
+    }
 
     class PictureAdapter extends PagerAdapter {
         ArrayList<ImageView> list;
