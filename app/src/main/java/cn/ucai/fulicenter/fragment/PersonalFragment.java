@@ -17,6 +17,7 @@ import butterknife.OnClick;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.CollectsActivity;
 import cn.ucai.fulicenter.activity.SettingsActivity;
 import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.bean.Result;
@@ -69,6 +70,7 @@ public class PersonalFragment extends Fragment {
     RelativeLayout rlPersonalStores;
     @Bind(R.id.rl_personal_steps)
     RelativeLayout rlPersonalSteps;
+    int count = 0;
 
     public PersonalFragment() {
     }
@@ -99,7 +101,9 @@ public class PersonalFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        syncUserInfo();
+        if (FuLiCenterApplication.userAvatar!=null) {
+            syncUserInfo();
+        }
         if (FuLiCenterApplication.userAvatar != null) {
             initData();
         }
@@ -157,7 +161,12 @@ public class PersonalFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_personal_collects:
-
+                if (count!=0) {
+                    Intent intent = new Intent(getActivity(), CollectsActivity.class);
+                    MFGT.startActivity(getActivity(), intent);
+                }else {
+                    CommonUtils.showShortToast("你还没有收藏宝贝");
+                }
                 break;
             case R.id.rl_personal_stores:
                 break;
@@ -177,10 +186,10 @@ public class PersonalFragment extends Fragment {
                         if (result != null) {
                             boolean success = result.isSuccess();
                             if (success) {
-                                int count = Integer.parseInt(result.getMsg());
+                                count = Integer.parseInt(result.getMsg());
                                 tvPersonalCountOfCollections.setText(count + "");
                             } else {
-                                int count = 0;
+                                count = 0;
                                 tvPersonalCountOfCollections.setText(count + "");
                             }
                         }
