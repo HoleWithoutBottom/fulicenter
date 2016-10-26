@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,6 +45,8 @@ public class CartFragment extends Fragment {
     CartAdapter mAdapter;
     ArrayList<GoodsDetailBean> goodsList;
     LinearLayoutManager manager;
+    @Bind(R.id.iv_cart_none)
+    ImageView ivCartNone;
 
     public CartFragment() {
     }
@@ -61,10 +62,12 @@ public class CartFragment extends Fragment {
     }
 
 
-
     private void initData() {
         goodsList = new ArrayList<>();
         goodsList = FuLiCenterApplication.detailBeenList;
+        if (goodsList == null || goodsList.size() == 0) {
+            ivCartNone.setVisibility(View.VISIBLE);
+        }
         mAdapter = new CartAdapter(goodsList, getActivity());
         recyclerCart.setAdapter(mAdapter);
         manager = new LinearLayoutManager(getActivity());
@@ -92,6 +95,7 @@ public class CartFragment extends Fragment {
         ImageView ivCart, ivAdd, ivDec;
         TextView tvGoodsName, tvGoodsCount, tvGoodsPrice;
         LinearLayout linearLayoutCart;
+
         public CartViewHolder(View itemView) {
             super(itemView);
             checkBox = (CheckBox) itemView.findViewById(R.id.chk_cart);
@@ -101,7 +105,7 @@ public class CartFragment extends Fragment {
             tvGoodsName = (TextView) itemView.findViewById(R.id.tv_cart_goodsName);
             tvGoodsCount = (TextView) itemView.findViewById(R.id.tv_cart_count);
             tvGoodsPrice = (TextView) itemView.findViewById(R.id.tv_cart_price);
-            linearLayoutCart= (LinearLayout) itemView.findViewById(R.id.linearLayout_cart);
+            linearLayoutCart = (LinearLayout) itemView.findViewById(R.id.linearLayout_cart);
             // 增加商品数量
             ivAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -172,10 +176,6 @@ public class CartFragment extends Fragment {
             return position;
         }
 
-        public void addCount(int position) {
-
-        }
-
         public void decCount(int position) {
             mList.remove(position);
             notifyDataSetChanged();
@@ -185,6 +185,11 @@ public class CartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (goodsList == null || goodsList.size() == 0) {
+            ivCartNone.setVisibility(View.VISIBLE);
+        } else {
+            ivCartNone.setVisibility(View.GONE);
+        }
         mAdapter.notifyDataSetChanged();
     }
 }

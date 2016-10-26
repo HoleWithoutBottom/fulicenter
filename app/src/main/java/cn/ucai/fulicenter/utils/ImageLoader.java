@@ -382,8 +382,8 @@ public class ImageLoader {
     public static String getUrl(UserAvatar userAvatar) {
         if (userAvatar != null) {
             String url = I.SERVER_ROOT + I.REQUEST_DOWNLOAD_AVATAR + "?" + I.NAME_OR_HXID + "=" + userAvatar.getMuserName()
-                    + I.AND + I.AVATAR_TYPE + "=" + userAvatar.getMavatarPath() + I.AND + I.Avatar.AVATAR_SUFFIX + "="+userAvatar.getMavatarSuffix()
-                    + I.AND + "width=200&height=200";
+                    + I.AND + I.AVATAR_TYPE + "=" + userAvatar.getMavatarPath() + I.AND + I.Avatar.AVATAR_SUFFIX + "=" + userAvatar.getMavatarSuffix()
+                    + I.AND + "width=200&height=200" + I.AND + userAvatar.getMavatarLastUpdateTime();
             return url;
         }
         return null;

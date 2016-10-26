@@ -87,7 +87,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 if (index == 4) {
                     if (FuLiCenterApplication.userAvatar == null) {
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                        MFGT.startActivityForResult(HomeActivity.this, intent,I.REQUEST_CODE_SUCCESS_LOGIN);
+                        MFGT.startActivityForResult(HomeActivity.this, intent, I.REQUEST_CODE_SUCCESS_LOGIN);
                         return;
                     }
                 }
@@ -137,6 +137,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.rbPersonal:
                 if (FuLiCenterApplication.userAvatar == null) {
                     Intent intent = new Intent(this, MainActivity.class);
+                    mRbPersonal.setChecked(false);
                     MFGT.startActivityForResult(this, intent, I.REQUEST_CODE_SUCCESS_LOGIN);
                     return;
                 }
@@ -178,14 +179,23 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        if (index == 4 && FuLiCenterApplication.userAvatar == null) {
+            index = 0;
+        }
         mViewPagerFragment.setCurrentItem(index);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == I.REQUEST_CODE_SUCCESS_LOGIN && FuLiCenterApplication.userAvatar!=null) {
+        if (requestCode == I.REQUEST_CODE_SUCCESS_LOGIN && FuLiCenterApplication.userAvatar != null) {
             index = 4;
+        }
+    }
+
+    public void onBackPressed() {
+        if (FuLiCenterApplication.userAvatar == null) {
+            MFGT.finish(this);
         }
     }
 }

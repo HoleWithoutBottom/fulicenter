@@ -64,6 +64,26 @@ public class UserAvatar {
         this.mavatarLastUpdateTime = mavatarLastUpdateTime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserAvatar that = (UserAvatar) o;
+
+        if (muserName != null ? !muserName.equals(that.muserName) : that.muserName != null)
+            return false;
+        return mavatarLastUpdateTime != null ? mavatarLastUpdateTime.equals(that.mavatarLastUpdateTime) : that.mavatarLastUpdateTime == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = muserName != null ? muserName.hashCode() : 0;
+        result = 31 * result + (mavatarLastUpdateTime != null ? mavatarLastUpdateTime.hashCode() : 0);
+        return result;
+    }
+
     public String getMavatarLastUpdateTime() {
         return mavatarLastUpdateTime;
     }
@@ -71,16 +91,5 @@ public class UserAvatar {
     public UserAvatar() {
     }
 
-    @Override
-    public String toString() {
-        return "UserAvatar{" +
-                "muserName='" + muserName + '\'' +
-                ", muserNick='" + muserNick + '\'' +
-                ", mavatarId=" + mavatarId +
-                ", mavatarPath='" + mavatarPath + '\'' +
-                ", mavatarSuffix='" + mavatarSuffix + '\'' +
-                ", mavatarType=" + mavatarType +
-                ", mavatarLastUpdateTime='" + mavatarLastUpdateTime + '\'' +
-                '}';
-    }
+
 }

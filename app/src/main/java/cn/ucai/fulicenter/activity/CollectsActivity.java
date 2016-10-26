@@ -1,5 +1,9 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +27,7 @@ import cn.ucai.fulicenter.bean.NewGoodsBean;
 import cn.ucai.fulicenter.bean.UserAvatar;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
@@ -98,10 +103,10 @@ public class CollectsActivity extends AppCompatActivity {
         glm = new GridLayoutManager(CollectsActivity.this, 2);
         recyclerCollections.setAdapter(mAdapter);
         recyclerCollections.setLayoutManager(glm);
-        downloadCollectsList(I.ACTION_DOWNLOAD,mPageId);
+        downloadCollectsList(I.ACTION_DOWNLOAD, mPageId);
     }
 
-    private void downloadCollectsList(final int action,int pageId) {
+    private void downloadCollectsList(final int action, int pageId) {
         final OkHttpUtils<CollectBean[]> utils = new OkHttpUtils<>(CollectsActivity.this);
         utils.setRequestUrl(I.REQUEST_FIND_COLLECTS)
                 .addParam(I.Collect.USER_NAME, userAvatar.getMuserName())
@@ -154,4 +159,10 @@ public class CollectsActivity extends AppCompatActivity {
         MFGT.finish(CollectsActivity.this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        downloadCollectsList(I.ACTION_DOWNLOAD, mPageId);
+        mAdapter.notifyDataSetChanged();
+    }
 }
