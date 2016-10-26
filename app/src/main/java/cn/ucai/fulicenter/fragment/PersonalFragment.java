@@ -8,17 +8,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.SettingsActivity;
+import cn.ucai.fulicenter.bean.MessageBean;
+import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.UserAvatar;
+import cn.ucai.fulicenter.dao.UserDao;
+import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.MFGT;
+import cn.ucai.fulicenter.utils.OkHttpUtils;
+import cn.ucai.fulicenter.utils.ResultUtils;
 
 
 public class PersonalFragment extends Fragment {
@@ -55,6 +63,12 @@ public class PersonalFragment extends Fragment {
     ImageView ivPersonalRefundAndAfterSales;
     @Bind(R.id.tv_personal_myCardBag)
     TextView tvPersonalMyCardBag;
+    @Bind(R.id.rl_personal_collects)
+    RelativeLayout rlPersonalCollects;
+    @Bind(R.id.rl_personal_stores)
+    RelativeLayout rlPersonalStores;
+    @Bind(R.id.rl_personal_steps)
+    RelativeLayout rlPersonalSteps;
 
     public PersonalFragment() {
     }
@@ -73,8 +87,21 @@ public class PersonalFragment extends Fragment {
     private void initData() {
         userAvatar = FuLiCenterApplication.userAvatar;
         if (userAvatar != null) {
+            syncCollections();
             tvPersonalUserName.setText(userAvatar.getMuserNick());
             ImageLoader.setAvatar(ImageLoader.getUrl(userAvatar), getActivity(), ivPersonalAvatar);
+        } else {
+            tvPersonalUserName.setText("nick");
+            ImageLoader.setAvatar(ImageLoader.getUrl(userAvatar), getActivity(), ivPersonalAvatar);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        syncUserInfo();
+        if (FuLiCenterApplication.userAvatar != null) {
+            initData();
         }
     }
 
@@ -95,4 +122,74 @@ public class PersonalFragment extends Fragment {
         MFGT.startActivity(getActivity(), intent);
     }
 
+    //用户更新
+    public void syncUserInfo() {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(getActivity());
+        utils.setRequestUrl(I.REQUEST_FIND_USER)
+                .addParam(I.User.USER_NAME, userAvatar.getMuserName())
+                .targetClass(String.class)
+                .execute(new OkHttpUtils.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Result result = ResultUtils.getResultFromJson(s, UserAvatar.class);
+                        if (result != null) {
+                            UserAvatar user = (UserAvatar) result.getRetData();
+                            boolean b = userAvatar.equals(user);
+                            if (!b) {
+                                userAvatar = user;
+                                FuLiCenterApplication.setUserAvatar(user);
+                                UserDao dao = new UserDao(getActivity());
+                                dao.updateUser(user);/*
+                                tvPersonalUserName.setText(user.getMuserNick());
+                                ImageLoader.setAvatar(ImageLoader.getUrl(user), getActivity(), ivPersonalAvatar);*/
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
+    }
+
+    @OnClick({R.id.rl_personal_collects, R.id.rl_personal_stores, R.id.rl_personal_steps})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rl_personal_collects:
+
+                break;
+            case R.id.rl_personal_stores:
+                break;
+            case R.id.rl_personal_steps:
+                break;
+        }
+    }
+
+    public void syncCollections() {
+        OkHttpUtils<MessageBean> utils = new OkHttpUtils<>(getActivity());
+        utils.setRequestUrl(I.REQUEST_FIND_COLLECT_COUNT)
+                .addParam(I.Collect.USER_NAME, userAvatar.getMuserName())
+                .targetClass(MessageBean.class)
+                .execute(new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null) {
+                            boolean success = result.isSuccess();
+                            if (success) {
+                                int count = Integer.parseInt(result.getMsg());
+                                tvPersonalCountOfCollections.setText(count + "");
+                            } else {
+                                int count = 0;
+                                tvPersonalCountOfCollections.setText(count + "");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast(error);
+                    }
+                });
+    }
 }
