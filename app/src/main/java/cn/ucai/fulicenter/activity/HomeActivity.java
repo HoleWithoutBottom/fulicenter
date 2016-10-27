@@ -1,6 +1,9 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -39,14 +42,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ViewPager mViewPagerFragment;
     int index;
     RadioButton[] rbs;
+    CountCart receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
+        initReceiver();
         initFragment();
         setListener();
+    }
+
+    private void initReceiver() {
+        receiver = new CountCart();
+        IntentFilter filter = new IntentFilter("countCart");
+        registerReceiver(receiver, filter);
     }
 
     private void initFragment() {
@@ -84,6 +95,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onPageSelected(int position) {
                 index = position;
                 setCheck();
+                if (index == 3) {
+                    if (FuLiCenterApplication.userAvatar == null) {
+                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                        MFGT.startActivityForResult(HomeActivity.this, intent, I.REQUEST_CODE_CART);
+                        return;
+                    }
+                }
                 if (index == 4) {
                     if (FuLiCenterApplication.userAvatar == null) {
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
@@ -120,6 +138,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 mViewPagerFragment.setCurrentItem(index);
                 break;
             case R.id.rbCart:
+                if (FuLiCenterApplication.userAvatar == null) {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    mRbPersonal.setChecked(false);
+                    MFGT.startActivityForResult(this, intent, I.REQUEST_CODE_CART);
+                    return;
+                }
                 index = 3;
                 setCheck();
                 mViewPagerFragment.setCurrentItem(index);
@@ -188,14 +212,28 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == I.REQUEST_CODE_SUCCESS_LOGIN && FuLiCenterApplication.userAvatar != null) {
-            index = 4;
+        if (FuLiCenterApplication.userAvatar != null) {
+            if (requestCode == I.REQUEST_CODE_SUCCESS_LOGIN) {
+                index = 4;
+            }
+            if (requestCode == I.REQUEST_CODE_CART) {
+                index = 3;
+            }
         }
     }
 
     public void onBackPressed() {
         if (FuLiCenterApplication.userAvatar == null) {
             MFGT.finish(this);
+        }
+    }
+
+    class CountCart extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int count = intent.getIntExtra("count", 0);
+            mTvCartHint.setText(count + "");
         }
     }
 }
