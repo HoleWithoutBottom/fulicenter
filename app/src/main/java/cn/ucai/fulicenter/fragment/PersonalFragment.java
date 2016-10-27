@@ -101,7 +101,7 @@ public class PersonalFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (FuLiCenterApplication.userAvatar!=null) {
+        if (FuLiCenterApplication.userAvatar != null) {
             syncUserInfo();
         }
         if (FuLiCenterApplication.userAvatar != null) {
@@ -161,10 +161,10 @@ public class PersonalFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_personal_collects:
-                if (count!=0) {
+                if (count != 0) {
                     Intent intent = new Intent(getActivity(), CollectsActivity.class);
                     MFGT.startActivity(getActivity(), intent);
-                }else {
+                } else {
                     CommonUtils.showShortToast("你还没有收藏宝贝");
                 }
                 break;

@@ -13,15 +13,12 @@ import cn.ucai.fulicenter.bean.UserAvatar;
 public class FuLiCenterApplication extends Application {
     public static FuLiCenterApplication application;
     private static FuLiCenterApplication instance;
-    public static ArrayList<GoodsDetailBean> detailBeenList;
     public static UserAvatar userAvatar;
-
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         application = this;
-        detailBeenList = new ArrayList<>();
     }
 
     public static FuLiCenterApplication getInstance() {

@@ -36,6 +36,7 @@ import cn.ucai.fulicenter.bean.PropertiesBean;
 import cn.ucai.fulicenter.utils.CommonUtils;
 
 import cn.ucai.fulicenter.utils.L;
+import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 import cn.ucai.fulicenter.views.FlowIndicator;
 
@@ -219,11 +220,12 @@ public class GoodsDetailActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_goodsDetail_back:
-                finish();
+                MFGT.finish(GoodsDetailActivity.this);
                 break;
             case R.id.iv_goodsDetail_cart:
                 if (FuLiCenterApplication.userAvatar != null) {
-                    FuLiCenterApplication.detailBeenList.add(goodsDetailBean);
+
+                    addCart(goodsDetailBean);
                 }
                 // L.e("sb"+FuLiCenterApplication.goodsDetailBean.toString());
                 break;
@@ -241,6 +243,29 @@ public class GoodsDetailActivity extends AppCompatActivity {
                 showShare();
                 break;
         }
+    }
+
+    public void addCart(final GoodsDetailBean goodsBean) {
+        OkHttpUtils<MessageBean> utils = new OkHttpUtils<>(GoodsDetailActivity.this);
+        utils.setRequestUrl(I.REQUEST_ADD_CART)
+                .addParam(I.Cart.GOODS_ID, goodsDetailBean.getGoodsId() + "")
+                .addParam(I.Cart.USER_NAME, FuLiCenterApplication.userAvatar.getMuserName())
+                .addParam(I.Cart.COUNT, 1 + "")
+                .addParam(I.Cart.IS_CHECKED, isChecked + "")
+                .targetClass(MessageBean.class)
+                .execute(new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null && result.isSuccess()) {
+                            CommonUtils.showShortToast("已添加到购物车");
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
     }
 
     // 添加收藏

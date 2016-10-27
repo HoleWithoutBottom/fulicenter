@@ -17,7 +17,7 @@ public class CartBean {
     private int id;
     private String userName;
     private int goodsId;
-    private Object goods;
+    private GoodsDetailBean goods;
     private int count;
     private boolean isChecked;
     private boolean checked;
@@ -53,7 +53,7 @@ public class CartBean {
         return goods;
     }
 
-    public void setGoods(Object goods) {
+    public void setGoods(GoodsDetailBean goods) {
         this.goods = goods;
     }
 

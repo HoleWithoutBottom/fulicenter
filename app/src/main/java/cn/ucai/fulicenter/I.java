@@ -29,6 +29,7 @@ public interface I {
     int TYPE_FOOTER = 1;
     int REQUEST_CODE_REGISTER = 101;
     int REQUEST_CODE_SUCCESS_LOGIN = 102;
+    int REQUEST_CODE_CART = 103;
     /**
      * BeeColud APP ID
      */
