@@ -18,12 +18,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.GoodsDetailActivity;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.GoodsDetailBean;
 import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
-import cn.ucai.fulicenter.utils.L;
+import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
 /**
@@ -55,6 +56,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         holder.tvCartCount.setText("(" + cartBean.getCount() + ")");
         holder.chkCart.setChecked(cartBean.isChecked());
         ImageLoader.downloadImg(context, holder.ivCart, goodsDetailBean.getGoodsThumb());
+        holder.linearLayoutCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, GoodsDetailActivity.class);
+                intent.putExtra("goodsId", goodsDetailBean.getGoodsId());
+                MFGT.startActivity(context, intent);
+            }
+        });
         // 增加商品数量
         holder.ivAddCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +127,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         Intent intent = new Intent("updateCart");
         intent.putExtra("total", total);
         intent.putExtra("spare", total - spare);
-        intent.putExtra("count",count);
+        intent.putExtra("count", count);
         context.sendBroadcast(intent);
     }
 
