@@ -25,11 +25,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
-import cn.ucai.fulicenter.MainActivity;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.OrderActivity;
 import cn.ucai.fulicenter.adapter.CartAdapter;
 import cn.ucai.fulicenter.bean.CartBean;
-import cn.ucai.fulicenter.utils.L;
 import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.OkHttpUtils;
 
@@ -153,6 +152,8 @@ public class CartFragment extends Fragment {
 
     @OnClick(R.id.btn_cart_buy)
     public void onClick() {
+        Intent intent = new Intent(getActivity(), OrderActivity.class);
+        MFGT.startActivity(getActivity(), intent);
     }
 
 
@@ -179,7 +180,7 @@ public class CartFragment extends Fragment {
             tvTotal.setText("合计:" + total);
             tvSpare.setText("节省:" + spare);
             int count = intent.getIntExtra("count", 0);
-            getActivity().sendBroadcast(new Intent("countCart").putExtra("count",count));
+            getActivity().sendBroadcast(new Intent("countCart").putExtra("count", count));
         }
     }
 }

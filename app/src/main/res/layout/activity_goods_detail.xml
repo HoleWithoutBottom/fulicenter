@@ -42,14 +42,6 @@
                 android:drawableRight="@drawable/selector_cart_bg"
                 android:button="@null"
                 />
-
-            <TextView
-                android:id="@+id/tv_goodDetail_cart_hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@id/iv_goodsDetail_cart"
-                android:text="4"
-                android:textColor="@color/black" />
         </RelativeLayout>
 
         <ImageView

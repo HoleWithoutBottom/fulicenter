@@ -46,8 +46,6 @@ public class GoodsDetailActivity extends AppCompatActivity {
     ImageView ivGoodsDetailBack;
     @Bind(R.id.iv_goodsDetail_cart)
     RadioButton ivGoodsDetailCart;
-    @Bind(R.id.tv_goodDetail_cart_hint)
-    TextView tvGoodDetailCartHint;
     @Bind(R.id.iv_goodsDetail_collect)
     ImageView ivGoodsDetailCollect;
     @Bind(R.id.iv_goodsDetail_share)
