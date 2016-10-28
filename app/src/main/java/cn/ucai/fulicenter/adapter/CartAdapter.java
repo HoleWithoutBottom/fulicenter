@@ -121,8 +121,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
                 GoodsDetailBean bean = (GoodsDetailBean) mList.get(i).getGoods();
                 total += mList.get(i).getCount() * Integer.parseInt(bean.getCurrencyPrice().substring(1));
                 spare += mList.get(i).getCount() * Integer.parseInt(bean.getRankPrice().substring(1));
-                count += mList.get(i).getCount();
             }
+            count += mList.get(i).getCount();
         }
         Intent intent = new Intent("updateCart");
         intent.putExtra("total", total);

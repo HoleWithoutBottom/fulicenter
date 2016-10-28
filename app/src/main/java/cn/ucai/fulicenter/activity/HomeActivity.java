@@ -127,6 +127,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mTvCartHint = (TextView) findViewById(R.id.tvCartHint);
         mViewPagerFragment = (ViewPager) findViewById(R.id.fragment_viewPager);
         rbs = new RadioButton[]{mRbNewGoods, mRbBotique, mRbCategory, mRbCart, mRbPersonal};
+        mTvCartHint.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -234,6 +235,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         public void onReceive(Context context, Intent intent) {
             int count = intent.getIntExtra("count", 0);
             mTvCartHint.setText(count + "");
+            mTvCartHint.setVisibility(View.VISIBLE);
         }
     }
 }
